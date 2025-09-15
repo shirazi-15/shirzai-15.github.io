@@ -10,87 +10,88 @@
 let circleColor = false;
 let currentColor = "white";
 
-let x; let y;
-let tsize = 50;
+let x; let y = 300;
+let tSize = 50;  //for text-font size
+//  declaration    initialization
 
 function setup() {
-  createCanvas(400, 400);  
-  x = width/2;        
-  y = 300;           
+  createCanvas(400, 400);
+  rectMode(CENTER);
+  x = width / 2;
 }
 
-function draw() {
+function draw() {  //60 fps
   background(220);
-  challenge();
+  challenge();  //coordinate system challenge
   movement();
-  rect(x, 300, 60, 30);
+  rect(x, y, 60, 30);
   mouseReport();
 }
 
-function movement(){
-  // check for keyboard presses in each frame
-  // and move the rect accordingly
-  // if(keyCode === RIGHT_ARROW && keyIsPressed){
-  //   x = x + 5
-  // }
-  // else if(keyCode === LEFT_ARROW && keyIsPressed){
-  //   x = x - 5
-  // }
-
-  if (keyIsDown(UP_ARROW)) y = y - 5;
-  if (keyIsDown(DOWN_ARROW)) y = y + 5;
-  if (keyIsDown(RIGHT_ARROW)) x = x + 5;
-  if (keyIsDown(LEFT_ARROW)) x = x - 5;
-  
-}
-
 function mouseReport(){
-  // inspect some of thr build_ins
-  // for working with some mouse
-  let src = mouseX + ", " + mouseY + ", " + mouseIsPressed + ", " + mouseButton;
+  // inspect some of the built-ins (system variables)
+  // for working with the mouse
+  fill(0);
+  let src = mouseX + ", " + mouseY + ", " + mouseIsPressed+","+mouseButton;
+  textSize(tSize);
   text(src, mouseX, mouseY);
 
-  
+  if(mouseIsPressed){
+    
+  }
 }
 
-function keyPressed(){
+function mousePressed(){
+  //function automatically called ONCE per mouse click interaction
+  tSize = random(10, 80);
+}
+
+
+
+
+
+
+function movement() {
+  // check for keyboard presses each frame
+  // and move the rectangle accordingly
+
+  // if (keyCode === RIGHT_ARROW && keyIsPressed) x += 5;
+  // else if (keyCode === LEFT_ARROW && keyIsPressed) x -= 5;
+
+  if (keyIsDown(UP_ARROW)) y -= 15;
+  if (keyIsDown(DOWN_ARROW)) y += 15;
+  if (keyIsDown(LEFT_ARROW)) x -= 15;
+  if (keyIsDown(RIGHT_ARROW)) x += 15;
+}
+
+function keyPressed() {
   // this is special EVENT function, gets
   // automatically called anytime a keyboard
+  // button is pressed.
 
 
-  // button is pressed
-  print("Key is pressed");
-  if(key === "g"){
-    currentColor = "green";
-  }
-  else if(keyCode === CONTROL){
-    currentColor = "blue";
+  print("key was pressed");
+  if (key === "g") currentColor = "green";
+  else if (keyCode === CONTROL) currentColor = "aqua";
 
-  }
+  circleColor = !circleColor;
 
-  circleColor = !circleColor
+  // how to tell WHICH key was pressed???
+
 }
 
-function challenge(){
-  // draw 5 hollow circle, in 4 connners and
-  // center position 
+function challenge() {
+  // draw 5 hollow circles, in 4 corners and 
+  // center position,  50px in diameter each
   noFill();
-  
-  if(circleColor === true){
+
+  if (circleColor) {  //circleColor === true
     fill(currentColor);
   }
-  // circle 5 
-  circle(height, width, 50);
-  
-  // circle 4
-  circle(height / 2, width / 2, 50);
-
-  // circle 3
+  //5 circles
   circle(0, 0, 50);
-
-  // circle 2
   circle(width, 0, 50);
-
-  // circle 1
   circle(0, height, 50);
-  }
+  circle(width, height, 50);
+  circle(width * 0.5, height * 0.5, 50);
+}
