@@ -10,11 +10,15 @@ function setup() {
 }
 
 function draw() {
+  //bg_sunrise();
   bg_sunset();
+  //bg_night();
+  land();
+  Alien();
 }
 
 function bg_sunset(){
-  // Draw sunset gradient
+  // Sunset gradient
   for (let y = 0; y < height; y++) {
     let inter = map(y, 0, height, 0, 1);
     // Gradient from orange at bottom to purple at top
@@ -23,8 +27,61 @@ function bg_sunset(){
     line(0, y, width, y);
   }
 
-  // Optionally, add a sun near the horizon
+  // Sun near the horizon
   noStroke();
   fill(255, 204, 0);
-  ellipse(width / 2, height * 0.8, 80, 80);
+  ellipse(width / 2, height * 0.7, 80, 80);
+}
+
+function bg_sunrise(){
+   // Sunrise gradient
+   for (let y = 0; y < height; y++) {
+    let inter = map(y, 0, height, 0, 1);
+    // Gradient from blue at bottom to white at top
+    let sunset = lerpColor(color(0, 170, 255), color(255 , 255, 255), inter);
+    stroke(sunset);
+    line(0, y, width, y);
+  }
+  // Sun near the horizon
+  noStroke();
+  fill(251, 255, 0);
+  ellipse(width / 2, height * 0.5, 80, 80);
+}
+
+function bg_night(){
+     // night gradient
+     for (let y = 0; y < height; y++) {
+      let inter = map(y, 0, height, 0, 1);
+      // Gradient from black at bottom to blue at top
+      let sunset = lerpColor(color(37, 14, 99), color(0, 0, 0), inter);
+      stroke(sunset);
+      line(0, y, width, y);
+    }
+    // Moon near the horizon
+    noStroke();
+    fill(255, 255, 255);
+    ellipse(width / 2, height * 0.4, 80, 80);
+}
+
+function land(){
+  fill(14, 99, 47);
+  ellipse(width / 2, height , width * 1.2, height * 0.6);
+  fill(230, 156, 21);
+  ellipse(width / 4, height / 1.15, width * 0.2, height * 0.18);
+  fill(255, 255, 255);
+  ellipse(width / 4, height / 1.15, width * 0.15, height * 0.15);
+
+}
+
+function Alien(){
+  noStroke()
+  fill(153, 255, 153);
+  rectMode(CENTER);
+  rect(cent_x, cent_y, 80 * headSize, 80 * headSize, 50* headSize, 50 * headSize, 0, 0);
+  rect(cent_x - 35 * headSize, cent_y + 55 * headSize, 10 * headSize, 30* headSize, 0, 0, 5* headSize, 5* headSize);
+  rect(cent_x + 35 * headSize, cent_y + 55 * headSize, 10 * headSize, 30 * headSize, 0, 0, 5 * headSize, 5* headSize);
+  fill(0, 0, 0);
+  circle(cent_x + 15 * headSize, cent_y - 5 * headSize, 7 * headSize);
+  circle(cent_x - 15 * headSize, cent_y - 5 * headSize, 7 * headSize);
+  rect(cent_x, cent_y+ 10 * headSize, 20 * headSize, 1 * headSize);
 }
