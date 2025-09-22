@@ -7,12 +7,13 @@ let headSize = 0.5;
 let cent_x;
 let cent_y;
 let bg_state = 0;
+let color_change;
 
 function setup() {
   createCanvas(400, 400);
   
   cent_x = width / 2;
-  cent_y = height / 2;
+  cent_y = height / 1.25;
 }
 
 function draw() {
@@ -21,27 +22,27 @@ function draw() {
   Alien();
 }
 
-
 function bg_decide(){
   switch(bg_state){
     case 0:
-      print("bg 1")
       bg_day();
+      print("bg 1");
       break;
     case 1:
       bg_sunset();
-      print("bg 2")
+      print("bg 2");
       break;
     case 2:
       bg_night();
-      print("bg 3")   
+      print("bg 3");  
       break;
     case 3:
       bg_sunrise();
-      print("bg 4")
+      print("bg 4");
       break;
   }
 }
+ 
 
 function bg_sunset(){
   // Sunset gradient
@@ -58,6 +59,7 @@ function bg_sunset(){
   fill(255, 204, 0);
   ellipse(width / 2, height * 0.7, 80, 80);
 }
+
 
 
 function bg_day(){
@@ -108,8 +110,6 @@ function bg_night(){
 function land(){
   fill(14, 99, 47);
   ellipse(width / 2, height , width * 1.2, height * 0.6);
-  fill(30, 141, 166);
-  ellipse(width / 4, height / 1.15, width * 0.2, height * 0.18);
 }
 
 function Alien(){
@@ -123,4 +123,12 @@ function Alien(){
   circle(cent_x + 15 * headSize, cent_y - 5 * headSize, 7 * headSize);
   circle(cent_x - 15 * headSize, cent_y - 5 * headSize, 7 * headSize);
   rect(cent_x, cent_y+ 10 * headSize, 20 * headSize, 1 * headSize);
+
+  // Movements
+  if(mouseIsPressed === true){
+    print("yes");
+    if(mouseButton === LEFT){
+      color_change = fill(66, 135, 245);
+    }
+  }
 }
