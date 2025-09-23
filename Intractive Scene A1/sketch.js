@@ -20,6 +20,7 @@ function draw() {
   bg_decide();
   land();
   Alien();
+  mousePressed();
 }
 
 function bg_decide(){
@@ -125,10 +126,17 @@ function Alien(){
   rect(cent_x, cent_y+ 10 * headSize, 20 * headSize, 1 * headSize);
 
   // Movements
-  if(mouseIsPressed === true){
-    print("yes");
-    if(mouseButton === LEFT){
-      color_change = fill(66, 135, 245);
+}
+
+function mousePressed(){
+  // print("yes");
+  // if(mouseButton === LEFT){
+  //   fill(66, 135, 245);
+
+  if(mouseButton === CENTER){
+    bg_decide++;
+    if (bg_decide > 3){
+      bg_decide = 0
     }
   }
 }
