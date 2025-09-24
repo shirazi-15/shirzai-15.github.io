@@ -20,7 +20,7 @@ function draw() {
   bg_decide();
   land();
   Alien();
-  mousePressed();
+  mouseIsPressed();
 }
 
 function bg_decide(){
@@ -60,8 +60,6 @@ function bg_sunset(){
   fill(255, 204, 0);
   ellipse(width / 2, height * 0.7, 80, 80);
 }
-
-
 
 function bg_day(){
   // Sunrise gradient
@@ -128,15 +126,15 @@ function Alien(){
   // Movements
 }
 
-function mousePressed(){
+function mouseIsPressed(){
   // print("yes");
   // if(mouseButton === LEFT){
   //   fill(66, 135, 245);
 
   if(mouseButton === CENTER){
-    bg_decide++;
-    if (bg_decide > 3){
-      bg_decide = 0
+    bg_state++;
+    if (bg_state > 3){
+      bg_state = 0
     }
   }
 }
