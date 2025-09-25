@@ -20,7 +20,7 @@ function draw() {
   bg_decide();
   land();
   Alien();
-  mouseIsPressed();
+  mouseClicked();
 }
 
 function bg_decide(){
@@ -126,15 +126,17 @@ function Alien(){
   // Movements
 }
 
-function mouseIsPressed(){
-  // print("yes");
-  // if(mouseButton === LEFT){
-  //   fill(66, 135, 245);
-
-  if(mouseButton === CENTER){
-    bg_state++;
-    if (bg_state > 3){
-      bg_state = 0
+function mouseClicked(){
+  print("yes");
+  if(mouseButton === LEFT){
+    fill(66, 135, 245);
+  }
+  else if(mouseIsPressed === true){
+    if(mouseButton = CENTER){
+      bg_state = bg_state + 1;
+      if (bg_state > 3){
+        bg_state = 0;
+      }
     }
   }
 }
