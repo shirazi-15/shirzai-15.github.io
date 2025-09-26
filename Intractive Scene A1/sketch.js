@@ -1,7 +1,8 @@
 // Intractive Scene  
 // Kamran Shirazi 
 // September 16, 2025
-//
+
+
 //  Global variables
 let headSize = 0.5;
 let cent_x;
@@ -24,6 +25,7 @@ function draw() {
   text("SK SHIRAZI", height/2 + 100, width/2 + 175);
 }
 
+// StateVaribale set to chane the background (cycle of day and night)
 function bg_decide(){
   switch(bg_state){
     case 0:
@@ -112,10 +114,11 @@ function land(){
   ellipse(width / 2, height , width * 1.2, height * 0.6);
 }
 
+// the protagonist (part Alien)
 function Alien(){
   noStroke()
   if(colorset){
-    fill(154, 168, 171);
+    fill(random(255), random(255), random(255));
   }
   else{
     fill(232, 126, 21);
@@ -132,6 +135,9 @@ function Alien(){
   // Movements
 }
 
+// the following chunck holdes the user controls
+// the lstf mouse click start Party mode
+// the center mouse click changes  the state of the day 
 function mousePressed(){
   print("yes");
   if(mouseButton === LEFT){
