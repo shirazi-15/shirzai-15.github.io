@@ -8,6 +8,7 @@ let cent_x;
 let cent_y;
 let bg_state = 0;
 let color_change;
+let colorset = false;
 
 function setup() {
   createCanvas(400, 400);
@@ -20,7 +21,7 @@ function draw() {
   bg_decide();
   land();
   Alien();
-  mouseClicked();
+  text("SK SHIRAZI", height/2 + 100, width/2 + 175);
 }
 
 function bg_decide(){
@@ -113,7 +114,12 @@ function land(){
 
 function Alien(){
   noStroke()
-  fill(232, 126, 21);
+  if(colorset){
+    fill(154, 168, 171);
+  }
+  else{
+    fill(232, 126, 21);
+  }
   rectMode(CENTER);
   rect(cent_x, cent_y, 80 * headSize, 80 * headSize, 50* headSize, 50 * headSize, 0, 0);
   rect(cent_x - 35 * headSize, cent_y + 55 * headSize, 10 * headSize, 30* headSize, 0, 0, 5* headSize, 5* headSize);
@@ -126,17 +132,28 @@ function Alien(){
   // Movements
 }
 
-function mouseClicked(){
+function mousePressed(){
   print("yes");
   if(mouseButton === LEFT){
-    fill(66, 135, 245);
+    colorset = !colorset;
   }
   else if(mouseIsPressed === true){
     if(mouseButton = CENTER){
       bg_state = bg_state + 1;
-      if (bg_state > 3){
+      if (bg_state > 4){
         bg_state = 0;
+      return;
       }
     }
   }
 }
+
+function keyPressed(){
+  if(keyCode === LEFT_ARROW){
+    cent_x = cent_x - 5;
+  }
+  else if(keyCode === RIGHT_ARROW){
+    cent_x = cent_x + 5;
+  }
+
+ }
