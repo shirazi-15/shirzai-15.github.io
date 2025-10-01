@@ -2,41 +2,55 @@
 // Kamran Shirazi
 // September 29, 2025
 
-let rectwidth = 1;
-let Time = 0.01;
-let TimeKeep = 0;
+let rectwidth = 1;  // make this wider to see better terrain
+let Time = 0;
+let TimeKeep = 0.01;  // smaller increment for noise input
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  generateTerrain();
 }
 
 function generateTerrain(){
-  // Use a Loop to generate and draw
-  // rectangle side to side to look 2D
-  // terrain
   rectMode(CORNERS);
+  background(220);  // clear the background each time you generate terrain
 
-  for(let x = 0; x < width; x+=rectwidth){
-    // Generate random height
-    // NOTE!!! change thus from random() to noise()
-    let recHeight = noise(Time);
-    recHeight = map(rectwidth, 0, 1, height*0.2, height*0.9);
+  let heigestRec = Infinity;  // highest point tracker, start from bottom
+  let LARGESTX = 0;
+  let LARGESTY = height;
 
-    // calculate the upper-right corner of rect
+  for(let x = 0; x < width; x += rectwidth){
+    // Generate noise-based height
+    let noiseVal = noise(Time);
+    // Map noise to desired height range
+    let recHeight = map(noiseVal, 0, 1, height * 0.2, height * 0.9);
+
     let x2 = x + rectwidth;
     let y2 = height - recHeight;
 
-    rect(x, height, x2, y2);
-    Time += TimeKeep;
-  }
+    if(y2 < heigestRec){
+      LARGESTX = x2;
+      LARGESTY = y2; 
+    }
 
-  rectMode(CORNER)  
+    rect(x, height, x2, y2);
+    
+
+    Time += TimeKeep;  // increment noise input smoothly
+  }
+  drawpin(LARGESTX, LARGESTY);
+  rectMode(CORNER);
 }
 
 function draw() {
-  // dont need to draw UNTIL
-  // animating the terrain once
-  background(220);
-  frameRate(2);
-  generateTerrain();
+  // background(220);
+  // frameRate(1);
+  // generateTerrain();
+}
+
+function drawpin(x, y){
+  line(x, y, x, y - 50);
+  fill(255, 0, 0);
+  circle(x, y - 50, 7);
+
 }
