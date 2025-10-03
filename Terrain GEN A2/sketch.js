@@ -5,17 +5,19 @@
 let rectwidth = 1;  // make this wider to see better terrain
 let Time = 0;
 let TimeKeep = 0.01;  // smaller increment for noise input
+let avgY = 0;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   rectwidth = 1;
+  totalRec = 0; 
+  avgY = 0;
 }
 
 function generateTerrain(){
-  noFill();
   rectMode(CORNERS);
   background(220);  // clear the background each time you generate terrain
-
+  let totalRec = 0; 
   let heigestRec = Infinity;  // highest point tracker, start from bottom
   let LARGESTX = 0;
   let LARGESTY = height;
@@ -35,9 +37,14 @@ function generateTerrain(){
       LARGESTY = y2; 
     }
 
+    avgY += y2;
     rect(x, height, x2, y2);
-    Time += TimeKeep;  // increment noise hopefully smoothly
+    Time += TimeKeep;  // increment noise 
+    totalRec++;
   }
+  avgY = avgY/totalRec;
+  fill(255, 0, 0);
+  line(0, avgY, width, avgY);
   drawpin(LARGESTX, LARGESTY); // pins the heightest rec
   rectMode(CORNER);
 }
@@ -63,7 +70,7 @@ function keyPressed(){
  if(keyCode === LEFT_ARROW){
   rectwidth = rectwidth - 0.05;
   if(rectwidth === 0.05){
-    rectwidth = 0.10;
+    return rectwidth = 0.10;
   }
 }
  else if(keyCode === RIGHT_ARROW){
