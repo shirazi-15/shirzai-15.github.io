@@ -16,6 +16,7 @@ function setup() {
 
 function generateTerrain(){
   rectMode(CORNERS);
+  noFill();
   background(220);  // clear the background each time you generate terrain
   let totalRec = 0; 
   let heigestRec = Infinity;  // highest point tracker, start from bottom
@@ -43,8 +44,7 @@ function generateTerrain(){
     totalRec++;
   }
   avgY = avgY/totalRec;
-  fill(255, 0, 0);
-  line(0, avgY, width, avgY);
+  avgLine(avgY);
   drawpin(LARGESTX, LARGESTY); // pins the heightest rec
   rectMode(CORNER);
 }
@@ -61,6 +61,12 @@ function drawpin(x, y){
   circle(x, y - 25, 7);
 }
 
+function avgLine(aY){
+  stroke("red")
+  line(0, aY, width, aY);
+  stroke(0)
+}
+ 
 function panning(){
   let pan = frameCount / 25;
   Time = 0 + pan;
