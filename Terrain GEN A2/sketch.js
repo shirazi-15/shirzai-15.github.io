@@ -56,15 +56,16 @@ function draw() {
 }
 
 function drawpin(x, y){
+  //Pin shape
   line(x, y, x, y - 25);
   fill(255, 0, 0);
   circle(x, y - 25, 7);
 }
 
 function avgLine(aY){
-  stroke("red")
+  stroke("red");
   line(0, aY, width, aY);
-  stroke(0)
+  stroke(0);
 }
  
 function panning(){
@@ -72,6 +73,7 @@ function panning(){
   Time = 0 + pan;
 }
 
+// Controls the width of the rectangles
 function keyPressed(){
  if(keyCode === LEFT_ARROW){
   rectwidth = rectwidth - 0.05;
