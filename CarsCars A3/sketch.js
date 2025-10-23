@@ -8,10 +8,21 @@ let westbound = [];
 let eastbound = [];
 let yLine = 150;
 let mytrafficLight;
+let e; let w;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  myVehicle = new Vehicle(width/4, height/4);
+  for(let i = 0; i < 10; i++){
+  e = new Vehicle(width/4, random(height*0.03 + 45, height/2 - 50), 0);
+  eastbound.push(e);
+  }
+
+  for(let i = 0; i < 10; i++){
+    w = new Vehicle(width/4, random(height/2 - 45, height - (height*0.03 + 50)), 1);
+    westbound.push(w);
+  }
+
+
   // mytrafficLight = new TrafficLight(width/2, height*0.03);
   noStroke();
 }
@@ -20,13 +31,22 @@ function draw(){
   randomSeed(1);
   background(50);
   drawRoad();
-  myVehicle.action();
   // mytrafficLight.display();
+  for(i of eastbound){
+    i.action();
+  }
+
+  for(j of westbound){
+    j.action();
+  }
+
+
+  
 }
 
-function mouseIsPressed(){
-  if(keyCode === " " ){
-    
+function keyPressed(){
+  if(keyCode === 32 ){
+    eastbound.push(new Vehicle(width/4, random(height*0.03 -20, height/2-20), 0));
   }
 }
 
@@ -48,10 +68,10 @@ function drawRoad(){
 
 class Vehicle{
   // 1. constructor
-  constructor(x, y){
+  constructor(x, y, w){
     this.x = x; this.y = y;
     this.c = color(random(255), random(255), random(255));
-    this.where = round(random(0, 1));
+    this.where = w;
     this.xSpeed = random(1, 8);
     this.vehicleType = round(random(0, 1));
   }
@@ -73,9 +93,16 @@ class Vehicle{
     fill(this.c);
     rect(this.x + fixXT/2, this.y, width*0.15, height*0.102);
     stroke(0);
-    strokeWeight(2);
-    line(this.x + fixXT/4, this.y - fixXT/4, this.x + fixXT/4, this.y + fixXT/4);
-    noStroke();
+    if(this.where === 0){
+      strokeWeight(2);
+      line(this.x + fixXT/4, this.y - fixXT/4, this.x + fixXT/4, this.y + fixXT/4);
+      noStroke();
+    }
+   else{
+      strokeWeight(2);
+      line(this.x + fixXT/4, this.y - fixXT/4, this.x + fixXT/4, this.y + fixXT/4);
+      noStroke();
+   }
   }
 
   display(){
