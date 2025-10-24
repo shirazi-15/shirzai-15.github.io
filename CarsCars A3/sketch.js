@@ -9,26 +9,28 @@ let eastbound = [];
 let yLine = 150;
 let mytrafficLight;
 let e; let w;
+let uplift;
+let lLift;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  uplift = height*0.15;
+  lLift = height*0.10;
   for(let i = 0; i < 10; i++){
-  e = new Vehicle(width/4, random(height*0.03 + 45, height/2 - 50), 0);
+  e = new Vehicle(width/4, random(height*0.03 + uplift, height/2 - lLift), 0);
   eastbound.push(e);
   }
 
   for(let i = 0; i < 10; i++){
-    w = new Vehicle(width/4, random(height/2 - 45, height - (height*0.03 + 50)), 1);
+    w = new Vehicle(width/4, random(height/2 + uplift, height - (height*0.03 + lLift)), 1);
     westbound.push(w);
   }
-
-
   // mytrafficLight = new TrafficLight(width/2, height*0.03);
   noStroke();
+  
 }
 
 function draw(){
-  randomSeed(1);
   background(50);
   drawRoad();
   // mytrafficLight.display();
@@ -39,14 +41,11 @@ function draw(){
   for(j of westbound){
     j.action();
   }
-
-
-  
 }
 
 function keyPressed(){
   if(keyCode === 32 ){
-    eastbound.push(new Vehicle(width/4, random(height*0.03 -20, height/2-20), 0));
+    eastbound.push(new Vehicle(width/4, random(height*0.10 - uplift, height/2 - llift), 0));
   }
 }
 
@@ -78,29 +77,29 @@ class Vehicle{
   // 2. Methods
   cars(){
     fill(0);
-    let fixXC = width/12;
-    rect(this.x, this.y, width*0.02, height*0.12);
-    rect(this.x + fixXC, this.y, width*0.02, height*0.12);
+    let fixXC = width/18;
+    rect(this.x, this.y, width*0.015, height*0.08);
+    rect(this.x + fixXC, this.y, width*0.015, height*0.08);
     fill(this.c);
-    rect(this.x + fixXC/2, this.y, width*0.11, height*0.08);
+    rect(this.x + fixXC/2, this.y, width*0.08, height*0.06);
   }
 
   truck(){
     fill(0);
-    let fixXT = width/8;
-    rect(this.x, this.y, width*0.02, height*0.12);
-    rect(this.x + fixXT, this.y, width*0.02, height*0.12);
+    let fixXT = width/15;
+    rect(this.x, this.y, width*0.015, height*0.12);
+    rect(this.x + fixXT, this.y, width*0.015, height*0.12);
     fill(this.c);
-    rect(this.x + fixXT/2, this.y, width*0.15, height*0.102);
+    rect(this.x + fixXT/2, this.y, width*0.1, height*0.08);
     stroke(0);
     if(this.where === 0){
       strokeWeight(2);
-      line(this.x + fixXT/4, this.y - fixXT/4, this.x + fixXT/4, this.y + fixXT/4);
+      line(this.x + fixXT, this.y - fixXT*0.4, this.x + fixXT, this.y + fixXT*0.4);
       noStroke();
     }
    else{
       strokeWeight(2);
-      line(this.x + fixXT/4, this.y - fixXT/4, this.x + fixXT/4, this.y + fixXT/4);
+      line(this.x + fixXT/2, this.y - fixXT/2, this.x + fixXT/2, this.y + fixXT/2);
       noStroke();
    }
   }
@@ -136,7 +135,7 @@ class Vehicle{
       this.xSpeed += 0.5;
     }
 
-    if(this.where === 0 && this.xSpeed < -8){
+    else if(this.where === 0 && this.xSpeed < -8){
       this.xSpeed -= 0.5;
     }
   }
@@ -146,7 +145,7 @@ class Vehicle{
       this.xSpeed -= 0.5;
     }
 
-    if(this.where === 0 && this.xSpeed < -1){
+    else if(this.where === 0 && this.xSpeed < -1){
       this.xSpeed += 0.5;
     }
   }
@@ -161,9 +160,11 @@ class Vehicle{
     if(random(1) < 0.01){
       this.speedUp();
     }
+
     if(random(1) < 0.01){
       this.speedDown();
     }
+
     if(random(1) < 0.01){
       this.changeColor();
     }
