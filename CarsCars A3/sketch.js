@@ -6,9 +6,12 @@
 let myVehicle; 
 let westbound = [];    
 let eastbound = [];
+let addEast = [];
+let addWest = [];
 let yLine = 150;
 let mytrafficLight;
 let e; let w;
+let ae; let aw;
 let uplift;
 let lLift;
 
@@ -16,6 +19,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   uplift = height*0.15;
   lLift = height*0.15;
+  mytrafficLight = new TrafficLight(width/2, height/2)
   for(let i = 0; i < 10; i++){
   e = new Vehicle(width/4, random(height*0.03 + uplift, height/2 - lLift), 0);
   eastbound.push(e);
@@ -33,19 +37,37 @@ function setup() {
 function draw(){
   background(50);
   drawRoad();
-  // mytrafficLight.display();
+  mytrafficLight.display();
+  mytrafficLight.update();
   for(i of eastbound){
-    i.action();
+    i.action(mytrafficLight.lightColor);
   }
 
   for(j of westbound){
-    j.action();
+    j.action(mytrafficLight.lightColor);
   }
 }
 
 function keyPressed(){
-  if(keyCode === 32 ){
-    eastbound.push(new Vehicle(width/4, random(height*0.10 - uplift, height/2 - llift), 0));
+  if(keyCode === 32){
+    mytrafficLight.turnRed();
+  }
+}
+
+function mouseIsPressed(){
+  if(keyIsDown===SHIFT){
+    ae = new Vehicle(mouseX, random(height*0.10 - uplift, height/2 - llift), 0);
+    addEast.push(e);
+    for(i of addEast){
+      i.action(mytrafficLight.lightColor);
+    }
+  }
+  else{
+    w = new Vehicle(mouseX, random(height/2 + lLift, height - (height*0.015 + lLift)), 1);
+    westbound.push(w);
+    for(j of westbound){
+      j.action(mytrafficLight.lightColor);
+    }
   }
 }
 
@@ -115,6 +137,10 @@ class Vehicle{
 
   move(){
     // moves the cars in selected directions 
+    if(this.lightColor === "red"){
+      return
+    }
+
     if(this.where === 0){
       this.x += this.xSpeed;
     }
@@ -153,9 +179,10 @@ class Vehicle{
     this.c = color(random(255), random(255), random(255));
   }
 
-  action(){
+  action(state){
     this.display();
-    this.move();
+    if(state === "green"){
+      this.move();
 
     if(random(1) < 0.01){
       this.speedUp();
@@ -167,6 +194,7 @@ class Vehicle{
 
     if(random(1) < 0.01){
       this.changeColor();
+    }
     }
   }
 }
@@ -189,23 +217,20 @@ class TrafficLight{
       fill("red")
     }
 
-    circle(this.x, this.y, 5)
+    circle(this.x, this.y, width*0.05);
   }
 
   turnRed(){
-    if(this.lightColor === "green"){{{{{
+    if(this.lightColor === "green"){
       this.lightColor = "red";
-      this.trafficTime = 120;
-    }}}}}
-
-    
+      this.trafficTime = 0;
+    }
   }
-
   
   update(){
     if(this.lightColor === "red"){
-      this.trafficTime--;
-      if(this.trafficTime <= 0){
+      this.trafficTime++;
+      if(this.trafficTime === 120){
         this.lightColor = "green";
       }
     }
