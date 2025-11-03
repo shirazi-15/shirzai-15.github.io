@@ -6,27 +6,27 @@
 let myVehicle; 
 let westbound = [];    
 let eastbound = [];
-let addEast = [];
-let addWest = [];
 let yLine = 150;
 let mytrafficLight;
 let e; let w;
-let ae; let aw;
 let uplift;
 let lLift;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  uplift = height*0.15;
-  lLift = height*0.15;
-  mytrafficLight = new TrafficLight(width/2, height/2)
+  uplift = height*0.14; // variables to adj the vehicals 
+  lLift = height*0.08;
+
+  mytrafficLight = new TrafficLight(width/2, height/2);
+  // folowing code creates the staring cars on the screen
+
   for(let i = 0; i < 10; i++){
-  e = new Vehicle(width/4, random(height*0.03 + uplift, height/2 - lLift), 0);
+  e = new Vehicle(random(width), random(height*0.03 + uplift, height/2 - lLift), 0);
   eastbound.push(e);
   }
 
   for(let i = 0; i < 10; i++){
-    w = new Vehicle(width/4, random(height/2 + lLift, height - (height*0.015 + lLift)), 1);
+    w = new Vehicle(random(width), random(height/2 + lLift, height - (height*0.015 + uplift)), 1);
     westbound.push(w);
   }
   // mytrafficLight = new TrafficLight(width/2, height*0.03);
@@ -54,20 +54,16 @@ function keyPressed(){
   }
 }
 
-function mouseIsPressed(){
-  if(keyIsDown===SHIFT){
-    ae = new Vehicle(mouseX, random(height*0.10 - uplift, height/2 - llift), 0);
-    addEast.push(e);
-    for(i of addEast){
-      i.action(mytrafficLight.lightColor);
-    }
+function mousePressed(){
+  // following chunk is use to add more vehicals
+  // SHIFT+mouse add a westwords going vehicals, 
+  if(keyIsDown(16)){
+    w = new Vehicle(mouseX, random(height/2 + lLift, height - (height*0.015 + uplift)), 1);
+    westbound.push(w);
   }
   else{
-    w = new Vehicle(mouseX, random(height/2 + lLift, height - (height*0.015 + lLift)), 1);
-    westbound.push(w);
-    for(j of westbound){
-      j.action(mytrafficLight.lightColor);
-    }
+    e = new Vehicle(mouseX, random(height*0.03 + uplift, height/2 - lLift), 0);
+    eastbound.push(e);
   }
 }
 
@@ -99,7 +95,7 @@ class Vehicle{
   // 2. Methods
   cars(){
     fill(0);
-    let fixXC = width/18;
+    let fixXC = width/18; // Custom variables 
     rect(this.x, this.y, width*0.015, height*0.08);
     rect(this.x + fixXC, this.y, width*0.015, height*0.08);
     fill(this.c);
@@ -108,12 +104,13 @@ class Vehicle{
 
   truck(){
     fill(0);
-    let fixXT = width/15;
+    let fixXT = width/15; // Custom variable
     rect(this.x, this.y, width*0.015, height*0.12);
     rect(this.x + fixXT, this.y, width*0.015, height*0.12);
     fill(this.c);
     rect(this.x + fixXT/2, this.y, width*0.1, height*0.08);
     stroke(0);
+    // Adj the truck line depending on the direction
     if(this.where === 0){
       strokeWeight(2);
       line(this.x + fixXT, this.y - fixXT*0.4, this.x + fixXT, this.y + fixXT*0.4);
@@ -137,10 +134,6 @@ class Vehicle{
 
   move(){
     // moves the cars in selected directions 
-    if(this.lightColor === "red"){
-      return
-    }
-
     if(this.where === 0){
       this.x += this.xSpeed;
     }
@@ -179,17 +172,19 @@ class Vehicle{
     this.c = color(random(255), random(255), random(255));
   }
 
-  action(state){
+  action(state){ // Para is responsible fro stopping the cars at the red light
     this.display();
     if(state === "green"){
       this.move();
 
     if(random(1) < 0.01){
       this.speedUp();
+      print(this.speedUp);
     }
 
     if(random(1) < 0.01){
       this.speedDown();
+      print(this.speedDown);
     }
 
     if(random(1) < 0.01){
@@ -228,6 +223,7 @@ class TrafficLight{
   }
   
   update(){
+    // Changes the light based on time sorta
     if(this.lightColor === "red"){
       this.trafficTime++;
       if(this.trafficTime === 120){
@@ -235,5 +231,4 @@ class TrafficLight{
       }
     }
   }
-
 }
