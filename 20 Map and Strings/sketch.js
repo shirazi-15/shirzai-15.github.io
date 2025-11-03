@@ -9,10 +9,11 @@ let imgText, rows, cols, colorMap;
 function preload(){
   textFile = loadStrings("assets/info.txt")
   imgText = loadStrings("assets/colorimage.txt")
-}
+}     
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  noStroke();
   // procressText();
 
 
@@ -29,6 +30,7 @@ function setup() {
     ["p", "purple"]
   ]);
   drawImage();
+ 
 }
 
 function procressText(){
