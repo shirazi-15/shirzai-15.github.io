@@ -4,19 +4,24 @@
 
 // 0 (black)     255 (white)
 // Global Variable
-let grid = [
-  [0,     0, 0,   255,   0],
-  [255,   0, 255,   0, 255],
-  [255, 255,   0, 255, 255],
-  [0,   255,   0,   0,   0],
-]
+let grid = [[],[]];
 
 let rows = grid.length;
 let cols = grid[0].length;
 let squareSize = 60;
+let pat = [0, 255];
+let gp = random(pat);
+
 
 function setup() {
   createCanvas(cols*squareSize, rows*squareSize);
+  grid = [
+    [0,     0, 0,   255,   0],
+    [255,   0, 255,   0, 255],
+    [255, 255,   0, 255, 255],
+    [0,   255,   0,   0,   0],
+  ];
+ 
 }
 
 function draw() {
@@ -65,4 +70,11 @@ function mousePressed(){
 
   // ALWAYS: flip the "focused tile"
   flip(x, y);
+
+  // If they Exist:
+  // filp our 
+  if(x+1 < cols) flip(x+1, y);
+  if(x-1 >= 0) flip(x-1, y);
+  if(y+1 < rows) flip(x, y+1);
+  if(y-1 >= 0) flip(x, y-1);
 }
