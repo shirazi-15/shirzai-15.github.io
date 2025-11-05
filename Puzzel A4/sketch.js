@@ -4,14 +4,14 @@
 
 // 0 (black)     255 (white)
 // Global Variable
-let grid = [[],[]];
+let grid = [];
 let squareSize = 60;
 let pat = [0, 255];
-let rows;
-let cols;
+let rows; let cols;
+let maxSq;
+
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
   grid = [
     [random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat)],
     [random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat)],
@@ -24,13 +24,15 @@ function setup() {
   ];
   rows = grid.length;
   cols = grid[0].length;
+  maxSq = rows*cols;
   createCanvas(cols*squareSize, rows*squareSize);
 }
 function draw() {
   background(220);
   renderGrid();
-  print(getCurrentX(), getCurrentY());
-
+  // print(getCurrentX(), getCurrentY());
+  youWin();
+  
 }
 
 function renderGrid(){
@@ -87,5 +89,25 @@ function mousePressed(){
 }
 
 function youWin(){
+  let winStateA = 0;
+  let winStateB = 0;
+  for(let c = 0; c < grid.length; c++){
+    for(let r = 0; r < grid[c].length; r++){
+      if(grid[c][r] === 0){
+        winStateA++;
+      }
+      else if(grid[c][r] === 255){
+        winStateB++;
+      }
+    }
+  }
+  if(winStateA === maxSq || winStateB === maxSq){
+    fill("lime");
+    textSize(50);
+    text("You Won", width/2, height/2);
+  }
+}
 
+function overLay(){
+  
 }
