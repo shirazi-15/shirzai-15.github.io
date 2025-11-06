@@ -9,6 +9,7 @@ let squareSize = 60;
 let pat = [0, 255];
 let rows; let cols;
 let maxSq;
+let isSquare;
 
 
 function setup() {
@@ -25,13 +26,15 @@ function setup() {
   rows = grid.length;
   cols = grid[0].length;
   maxSq = rows*cols;
+  isSquare = 0;
   createCanvas(cols*squareSize, rows*squareSize);
 }
 function draw() {
   background(220);
   renderGrid();
-  // print(getCurrentX(), getCurrentY());
+  Overlay();
   youWin();
+  print(isSquare )
   
 }
 
@@ -108,6 +111,50 @@ function youWin(){
   }
 }
 
-function overLay(){
-  
+function Overlay(){
+  let x = getCurrentX();
+  let y = getCurrentY();
+
+  fill(0,0,255,100);
+  // if(isSquare === 0 && keyIsDown(SHIFT)){
+  //   square(x*squareSize,y*squareSize,squareSize);     
+  // }
+
+  // else if(isSquare === 0 && key === ' '){
+  // square(x*squareSize,y*squareSize,squareSize);
+  // if(x+1 < cols)square((x+1)*squareSize, y*squareSize, squareSize);
+  // if(y+1 < rows)square(x*squareSize,(y+1)*squareSize,squareSize);
+  // if(y+1 < rows && x + 1 < cols)square((x+1)*squareSize,(y+1)*squareSize,squareSize);
+  // }
+  // el     
+  switch(isSquare){
+    case 0:
+      square(x*squareSize ,y*squareSize,squareSize);
+      if(x+1 < cols)square((x+1)*squareSize, y*squareSize, squareSize);
+      if(x>= 0)square((x-1)*squareSize,y*squareSize,squareSize);
+      if(y+1 < rows)square(x*squareSize,(y+1)*squareSize,squareSize);
+      if(y-1 >= 0)square(x*squareSize,(y-1)*squareSize,squareSize);
+      break;
+      
+    case 1:
+      square(x*squareSize,y*squareSize,squareSize);
+      if(x+1 < cols)square((x+1)*squareSize, y*squareSize, squareSize);
+      if(y+1 < rows)square(x*squareSize,(y+1)*squareSize,squareSize);
+      if(y+1 < rows && x + 1 < cols)square((x+1)*squareSize,(y+1)*squareSize,squareSize);
+      break;
+    
+    case 2:
+      square(x*squareSize,y*squareSize,squareSize); 
+      break;
+  }
+}
+
+function keyPressed(){
+  if(key === " "){
+    if(isSquare === 0) isSquare = 1;
+    else if(isSquare === 1) isSquare = 0;
+  }
+  else if(keyPressed(SHIFT)){
+    isSquare = 2;
+  }
 }
