@@ -81,6 +81,7 @@ function mousePressed(){
 
   if(keyIsDown(SHIFT)){
     flip(x, y);
+    isSquare = 2;
   }
   else{
     flip(x, y);
@@ -151,10 +152,8 @@ function Overlay(){
 
 function keyPressed(){
   if(key === " "){
-    if(isSquare === 0) isSquare = 1;
+    if(isSquare === 0) isSquare = 1;  
     else if(isSquare === 1) isSquare = 0;
-  }
-  else if(keyPressed(SHIFT)){
-    isSquare = 2;
+    else if(isSquare === 2) isSquare = 0;
   }
 }
