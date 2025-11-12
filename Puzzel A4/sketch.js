@@ -81,15 +81,21 @@ function mousePressed(){
 
   if(keyIsDown(SHIFT)){
     flip(x, y);
-    isSquare = 2;
   }
-  else{
-    flip(x, y);
-    if(x+1 < cols) flip(x+1, y);
-    if(x-1 >= 0) flip(x-1, y);
-    if(y+1 < rows) flip(x, y+1);
-    if(y-1 >= 0) flip(x, y-1);
-  }
+  else
+    if(isSquare === 0){
+      flip(x, y);
+      if(x+1 < cols) flip(x+1, y);
+      if(x-1 >= 0) flip(x-1, y);    
+      if(y+1 < rows) flip(x, y+1);
+      if(y-1 >= 0) flip(x, y-1);
+    }
+    else if(isSquare === 1){
+      flip(x, y);
+      if(x+1 < cols) flip(x+1, y);
+      if(y+1 >= 0) flip(x, y+1);
+      if(x+1 < cols && y+1 >= 0) flip(x+1, y+1);
+   }
 }
 
 function youWin(){
@@ -151,9 +157,13 @@ function Overlay(){
 }
 
 function keyPressed(){
-  if(key === " "){
-    if(isSquare === 0) isSquare = 1;  
-    else if(isSquare === 1) isSquare = 0;
-    else if(isSquare === 2) isSquare = 0;
+  if(keyIsDown(SHIFT)){
+    isSquare = 2;
+  }
+  else{
+    if(keyCode === 32){
+      if(isSquare === 0) isSquare = 1;  
+      else isSquare = 0;
+    }
   }
 }
