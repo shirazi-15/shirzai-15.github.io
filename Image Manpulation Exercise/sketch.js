@@ -1,6 +1,6 @@
 // Image Manipulation
 // Kamran Shirazi
-// Nov 12, 2025
+// Nov 13, 2025
 
 // Global Variable
 let pilot;
@@ -12,7 +12,7 @@ function setup() {
 }
 
 async function laodAsstes(){
-  pilot = await createVideo("Assets/bball.mp4");
+  pilot = await loadImage("Assets/chip.jpg");
   pilot.hide();
   pilot.loop();
 }

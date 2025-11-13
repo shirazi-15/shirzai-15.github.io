@@ -1,25 +1,36 @@
 // Puzzel Game
 // Kamran Shirazi
-// Nov 4, 2025
+// Nov 5, 2025
 
 // 0 (black)     255 (white)
 
 // Global Variable
-let grid = [];
+let grid = [
+  [0, ,0 , 0, 0, 255, 255, 255, 255],
+  [0, ,0 , 0, 0, 255, 255, 255, 255],
+  [0, ,0 , 0, 0, 255, 255, 255, 255],
+  [0, ,0 , 0, 0, 255, 255, 255, 255],
+  [0, ,0 , 0, 0, 255, 255, 255, 255],
+  [0, ,0 , 0, 0, 255, 255, 255, 255],
+  [0, ,0 , 0, 0, 255, 255, 255, 255],
+  [0, ,0 , 0, 0, 255, 255, 255, 255]
+];
+
 let squareSize = 60;
-let pat = [0, 255];
 let rows; let cols;
 let maxSq;
 let isSquare;
+rows = grid.length;
+cols = grid[0].length;
 
 
 function setup() {
   ranColors();
 
-  rows = grid.length;
-  cols = grid[0].length;
+  // calculates the grid and sets the state to 0 → plus
   maxSq = rows*cols;
   isSquare = 0;
+
   createCanvas(cols*squareSize, rows*squareSize);
 }
 function draw() {
@@ -33,16 +44,14 @@ function draw() {
 function ranColors(){
   // gives each square a random color eithwe 0 or 255
 
-  grid = [
-    [random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat)],
-    [random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat)],
-    [random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat)],
-    [random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat)],
-    [random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat)],
-    [random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat)],
-    [random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat)],
-    [random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat)]
-  ];
+
+
+  for(let y = 0; y<rows; y++){
+    for(let x = 0; x<cols; x++){
+      grid[y][x] = random([0,255]);
+    }
+  }    
+
 }
 
 function renderGrid(){
@@ -106,7 +115,7 @@ function mousePressed(){
 }
 
 function youWin(){
-  // this cheks the grid and if you have all 0 or 255 it displays "YOU WON"
+  // this cheks the grid and if you have all 0 or 255 it displays "You Won"
   let winStateA = 0;
   let winStateB = 0;
   for(let c = 0; c < grid.length; c++){
@@ -130,7 +139,7 @@ function Overlay(){
   let x = getCurrentX();
   let y = getCurrentY();
 
-  fill(0,0,255,100);
+  fill(50, 205, 50, 100);
 
   // Switch variable is responsible for creating the hover effect
   // 0 → plus , 1 → square , 2 → cheating
