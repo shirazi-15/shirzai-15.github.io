@@ -3,6 +3,7 @@
 // Nov 4, 2025
 
 // 0 (black)     255 (white)
+
 // Global Variable
 let grid = [];
 let squareSize = 60;
@@ -13,16 +14,8 @@ let isSquare;
 
 
 function setup() {
-  grid = [
-    [random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat)],
-    [random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat)],
-    [random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat)],
-    [random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat)],
-    [random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat)],
-    [random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat)],
-    [random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat)],
-    [random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat)]
-  ];
+  ranColors();
+
   rows = grid.length;
   cols = grid[0].length;
   maxSq = rows*cols;
@@ -34,8 +27,22 @@ function draw() {
   renderGrid();
   Overlay();
   youWin();
-  print(isSquare )
-  
+  print(isSquare) // to check which state are you in
+}
+
+function ranColors(){
+  // gives each square a random color eithwe 0 or 255
+
+  grid = [
+    [random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat)],
+    [random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat)],
+    [random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat)],
+    [random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat)],
+    [random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat)],
+    [random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat)],
+    [random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat)],
+    [random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat), random(pat)]
+  ];
 }
 
 function renderGrid(){
@@ -99,6 +106,7 @@ function mousePressed(){
 }
 
 function youWin(){
+  // this cheks the grid and if you have all 0 or 255 it displays "YOU WON"
   let winStateA = 0;
   let winStateB = 0;
   for(let c = 0; c < grid.length; c++){
@@ -123,17 +131,10 @@ function Overlay(){
   let y = getCurrentY();
 
   fill(0,0,255,100);
-  // if(isSquare === 0 && keyIsDown(SHIFT)){
-  //   square(x*squareSize,y*squareSize,squareSize);     
-  // }
 
-  // else if(isSquare === 0 && key === ' '){
-  // square(x*squareSize,y*squareSize,squareSize);
-  // if(x+1 < cols)square((x+1)*squareSize, y*squareSize, squareSize);
-  // if(y+1 < rows)square(x*squareSize,(y+1)*squareSize,squareSize);
-  // if(y+1 < rows && x + 1 < cols)square((x+1)*squareSize,(y+1)*squareSize,squareSize);
-  // }
-  // el     
+  // Switch variable is responsible for creating the hover effect
+  // 0 → plus , 1 → square , 2 → cheating
+
   switch(isSquare){
     case 0:
       square(x*squareSize ,y*squareSize,squareSize);
@@ -157,13 +158,23 @@ function Overlay(){
 }
 
 function keyPressed(){
+  // this code controls the state of the flipper
   if(keyIsDown(SHIFT)){
     isSquare = 2;
   }
   else{
     if(keyCode === 32){
+      // Coment the print if the code acts funny
+      //print("space")
       if(isSquare === 0) isSquare = 1;  
       else isSquare = 0;
     }
+  }
+}
+
+function keyReleased(){
+  // helper function for design purposes
+  if(keyCode === 16){
+    isSquare = 0;
   }
 }
