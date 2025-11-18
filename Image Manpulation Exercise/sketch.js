@@ -7,8 +7,13 @@ let myImg1; let myImg2;
 
  async function setup() {
   pixelDensity(1);
-  myImg1 = await loadImage("Assets/hand.jpg");
-
+  myImg1 = await loadImage("Assets/chip.jpg");
+  myImg2 = await loadImage("Assets/race.jpg");
+  myImg3 = await loadImage("Assets/nuit.jpg");
+  myImg4 = await loadImage("Assets/hand.jpg");
+ 
+  imgNo = 3;
+  currfilter = 3;
   createCanvas(600, 600);
 }
 
@@ -24,19 +29,28 @@ function mousePressed(){
   started = true;
   resizeCanvas(myImg1.width, myImg1.height, false);
   myImg1.loop();
+}
 
+function keyPressed(){
+  if(keyCode === 32){
+    imgNo++;
+    if(imgNo < 4){
+      imgNo = 0;
+    }
+  }
 }
  
 function draw() {
   background(220);
   if(started){
-    image(myImg1, 0, 0);
+    imageChanger()
     loadPixels();
     
-    // gClear();
-    // mColor();
+    filterChanger()
+    // clearGreen();
+    // majorColor();
     // fcPosterize();
-    horiMiya();
+    // mirrorImage();
 
     updatePixels();
   }
@@ -46,7 +60,7 @@ function draw() {
   
 }
 
-function gClear(){
+function clearGreen(){
   // use trge single loop strategy
   for(let i = 0; i< pixels.length; i+=4){
     let pixelIndex = (i /4) % width;
@@ -56,7 +70,7 @@ function gClear(){
   }
 }
 
-function mColor(){
+function majorColor(){
  
   for(let i= 0; i < pixels.length; i+=4){
     let r; let g; let b;
@@ -126,7 +140,7 @@ function fcPosterize(){
   }
 }
 
-function horiMiya(){
+function mirrorImage(){
   let r; let g; let b;
   for(let y = 0; y < pixels.length; y+=4){
     for(let x = 0; x < pixels[y].length; x+=4){
@@ -180,4 +194,39 @@ function grayScale(){
     }
   }
 }
+
+function imageChanger(){
+  switch(imgNo){
+    case 0:
+      image(myImg1, 0, 0);
+      break;
+    case 1:
+      image(myImg2, 0, 0);
+      break;
+    case 2:
+      image(myImg3, 0, 0);
+      break;
+    case 3:
+      image(myImg4, 0, 0);
+      break;      
+  }
+}
+
+function filterChanger(){
+  switch(currfilter){
+    case 0:
+      majorColor();
+      break;
+    case 1:
+      clearGreen();
+      break;
+    case 2:
+      fcPosterize();
+      break;
+    case 3:
+      mirrorImage();
+      break;        
+  }
+}
+
 
