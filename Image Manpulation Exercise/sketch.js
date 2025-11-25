@@ -17,16 +17,14 @@ let myImg1; let myImg2;
   createCanvas(600, 600);
 }
 
-// async function laodAsstes(){
-//   myImg1 = await loadImage("Assets/chip.jpg");
-//   myImg1.hide();
-//   myImg1.loop();
-// }
-
 let started = false;
 
 function mousePressed(){
   started = true;
+  imgNo++;
+  if(imgNo > 3) imgNo = 0;
+  currfilter++;
+  if(currfilter > 3) currfilter = 0;
   resizeCanvas(myImg1.width, myImg1.height, false);
   myImg1.loop();
 }
@@ -141,25 +139,21 @@ function fcPosterize(){
 }
 
 function mirrorImage(){
-  let r; let g; let b;
-  for(let y = 0; y < pixels.length; y+=4){
-    for(let x = 0; x < pixels[y].length; x+=4){
-      let pixelIndex = (i /4) % width;
-      if(pixelIndex > width/2){
-        r = pixels[y];
-        g = pixels[y+1];
-        b = pixels[y+2];
-      }
-      if(pixelIndex < width/2){
-        pixels[width - y] = r;
-        pixels[width - y+1] = g;
-        pixels[width - y+2] = b;
-      
-      }
+  for(let y = 0; y < height; y++){
+    for(let x = width/2; x < width; x++){
+      let i = (y * width + x) * 4;
+
+      let mirrorX = width - 1 - x;
+      let mirrorPixle = (y * width + mirrorX) * 4;
+
+      pixels[mirrorPixle] = pixels[i];
+      pixels[mirrorPixle+1] = pixels[i+1];
+      pixels[mirrorPixle+2] = pixels[i+2];
+      pixels[mirrorPixle+3] = pixels[i+3];
+
     }
   }
 }
-
 
 function textImage(){
   // render an Iamge using characters
