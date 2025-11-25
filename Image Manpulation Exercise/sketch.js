@@ -45,11 +45,12 @@ function draw() {
     loadPixels();
     
     filterChanger()
+
     // clearGreen();
     // majorColor();
     // fcPosterize();
     // mirrorImage();
-
+    
     updatePixels();
   }
   else{
