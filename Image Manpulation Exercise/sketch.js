@@ -223,5 +223,3 @@ function filterChanger(){
       break;        
   }
 }
-
-
