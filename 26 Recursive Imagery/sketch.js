@@ -34,6 +34,7 @@ function circleFractal(x, y, d){
 function luckySquare(x, y, s){
   if(s > 3){
     push();
+    
     translate(x, y);
     rotate(radians(frameCount));
     square(0 , 0, s);
