@@ -4,7 +4,7 @@
 
 // Global Variable
 let myImg1; let myImg2;
-
+let myImg3; let myImg4;
  async function setup() {
   pixelDensity(1);
   myImg1 = await loadImage("Assets/chip.jpg");
