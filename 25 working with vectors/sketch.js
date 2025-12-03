@@ -28,7 +28,7 @@ function draw() {
 class Ball{
   constructor(x, y){
     this.pos = createVector(x, y);
-    this.vel = createVector(-5, -  5);
+    this.vel = createVector(-5, -5);
     this.grav = createVector(0, 0.2);
   }
 
