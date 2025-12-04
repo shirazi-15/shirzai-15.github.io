@@ -3,7 +3,7 @@
 // 2 Dec to 
 
 // Global Varible
-let bg; let pUp; let pDw;
+let bg1; let bg2; let pUp; let pDw;
 let bird1; let bird2; let player; 
 let pipes = [];
 
@@ -15,7 +15,8 @@ function setup(){
 }
 
 async function preLoad(){
-  bg = await loadImage("assets.FB/background.png");
+  bg1 = await loadImage("assets.FB/background.png");
+  bg2 = await loadImage("assets.FB/background2.png");
   bird1 = await loadImage("assets.FB/bird.png");
   bird2 = await loadImage("assets.FB/bird2.png");
   pUp = await loadImage("assets.FB/pipe1.png");
@@ -23,27 +24,34 @@ async function preLoad(){
 }     
 
 function draw(){
-  background(bg);
-
-  // PIPE LOGIC
-  if (frameCount % 180 === 0) pipes.push(new Pipe());
-  for (let i = pipes.length - 1; i >= 0; i--){
-    pipes[i].update();
-    pipes[i].display();
-    if (pipes[i].offscreen()) pipes.splice(i, 1);
-  }
+  background(bg1);
+  pipeloop();
+ 
 
   // PLAYER
-  player.update();
+  player.update();  
   player.display();
 }
   
+function dayOrnight(){
+  
+}
 
 function keyPressed(){
   if (keyCode === 32) { // space
     player.jump();
   }
 } 
+
+function pipeloop(){
+   // PIPE LOGIC
+   if (frameCount % 180 === 0) pipes.push(new Pipe());
+   for (let i = pipes.length - 1; i >= 0; i--){
+     pipes[i].update();
+     pipes[i].display();
+     if (pipes[i].offscreen()) pipes.splice(i, 1);
+   }
+}
 
 class Player{
   constructor(x, y){
@@ -53,7 +61,7 @@ class Player{
     this.g = 0.5;  // gravity
     this.jumpForce = -10;
     this.onGround = true;
-    this.animSpeed = 80;  // how many frames before switching image
+    this.animSpeed = 70;  // how many frames before switching image
     this.currentFrame = 0;
   }
 
@@ -91,9 +99,8 @@ class Pipe {
   constructor() {
     this.x = width;
     this.speed = 2;
-
     this.gap = 200;  // opening between pipes
-    this.top = random(50, height - 200);
+    this.top = random(100, height - 500);
     this.bottom = this.top + this.gap;
   }
 
@@ -111,5 +118,6 @@ class Pipe {
 
     // BOTTOM PIPE (open upward)
     image(pUp, this.x, this.bottom);
+
   }
 }
