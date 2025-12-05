@@ -5,13 +5,13 @@
 // Global Varible
 let bg1; let bg2; let pUp; let pDw;
 let bird1; let bird2; let player; 
-let pipes = [];
+let pipes = []; let score; 
 
 function setup(){
   preLoad();
   createCanvas(windowWidth, windowHeight);
   player = new Player(width/4.5, height/2);
-  pipes.push(new Pipe()); // first pipe appears instantly
+  pipes.push(new Pipe()); 
 }
 
 async function preLoad(){
@@ -31,9 +31,11 @@ function draw(){
   // PLAYER
   player.update();  
   player.display();
+
+  checkCollisions()  
 }
   
-function dayOrnight(){
+function scoreKeeper(){
   
 }
 
@@ -52,6 +54,49 @@ function pipeloop(){
      if (pipes[i].offscreen()) pipes.splice(i, 1);
    }
 }
+
+function checkCollisions() {
+  for (let i = 0; i < pipes.length; i++) {
+    let pipe = pipes[i];
+
+    // Bird hitbox
+    let bw = bird1.width;
+    let bh = bird1.height;
+
+    // TOP PIPE hitbox
+    let hitTop = collideRectRect(
+      player.x, player.y, bw, bh,           // bird
+      pipe.x, pipe.top - pUp.height,        // top pipe
+      pUp.width, pUp.height
+    );
+
+    // BOTTOM PIPE hitbox
+    let hitBottom = collideRectRect(
+      player.x, player.y, bw, bh,           // bird
+      pipe.x, pipe.bottom,                  // bottom pipe
+      pUp.width, pUp.height
+    );
+
+    if (hitTop || hitBottom) {
+      gameOver();
+      return;
+    }
+  }
+
+  // Ground + ceiling collision
+  if (player.y <= 0 || player.y >= height - 50) {
+    gameOver();
+  }
+}   
+
+function gameOver(){
+  noLoop(); // stop the game
+  textSize(60);
+  fill(255, 0, 0);
+  textAlign(CENTER, CENTER);
+  text("GAME OVER", width / 2, height / 3);
+}
+
 
 class Player{
   constructor(x, y){
