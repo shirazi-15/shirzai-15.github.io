@@ -5,7 +5,8 @@
 // Global Varible
 let bg1; let bg2; let pUp; let pDw;
 let bird1; let bird2; let player; 
-let pipes = []; let score; 
+let pipes = []; let score = 0; 
+let gameState = true; let high_Score;
 
 function setup(){
   preLoad();
@@ -25,25 +26,58 @@ async function preLoad(){
 
 function draw(){
   background(bg1);
-  pipeloop();
- 
 
-  // PLAYER
-  player.update();  
+  // Pipes
+  pipeloop();
+
+  // PLAYER 
+  player.update();   
   player.display();
 
-  checkCollisions()  
-}
-  
-function scoreKeeper(){
-  
+  // Main logic 
+  scoreKeeper();
+  highScore();
+  checkCollisions();
+
 }
 
 function keyPressed(){
-  if (keyCode === 32) { // space
+  if (keyCode === 32) {
+    if(gameState === false) restartGame();
     player.jump();
-  }
+  } 
 } 
+
+function scoreKeeper(){
+  for (let i = 0; i < pipes.length; i++) {
+    let pipe = pipes[i];
+
+    if (!pipe.scored && pipe.x + pUp.width < player.x*1.5){
+      score++;
+      pipe.scored = true;
+    }
+  }
+
+  // Draw score on screen
+  textSize(48);
+  fill(255);
+  stroke(0);
+  strokeWeight(4);
+  textAlign(LEFT, TOP);
+  text("Score: " + score, 20, 20);
+}
+
+function highScore(){
+
+
+  // Draw score on screen
+  textSize(48);
+  fill(255);
+  stroke(0);
+  strokeWeight(4);
+  textAlign(LEFT, TOP);
+  text("High Score: " + score, 20, 75);
+}
 
 function pipeloop(){
    // PIPE LOGIC
@@ -56,6 +90,7 @@ function pipeloop(){
 }
 
 function checkCollisions() {
+  // p5.collision2D library
   for (let i = 0; i < pipes.length; i++) {
     let pipe = pipes[i];
 
@@ -64,16 +99,17 @@ function checkCollisions() {
     let bh = bird1.height;
 
     // TOP PIPE hitbox
-    let hitTop = collideRectRect(
-      player.x, player.y, bw, bh,           // bird
-      pipe.x, pipe.top - pUp.height,        // top pipe
-      pUp.width, pUp.height
+   let hitTop = collideRectRect(
+    player.x, player.y, bw, bh,           
+    pipe.x, pipe.top - pUp.height,        
+    pDw.width, pDw.height
     );
+
 
     // BOTTOM PIPE hitbox
     let hitBottom = collideRectRect(
-      player.x, player.y, bw, bh,           // bird
-      pipe.x, pipe.bottom,                  // bottom pipe
+      player.x, player.y, bw, bh,
+      pipe.x, pipe.bottom,
       pUp.width, pUp.height
     );
 
@@ -90,11 +126,24 @@ function checkCollisions() {
 }   
 
 function gameOver(){
+  gameState = false;
   noLoop(); // stop the game
   textSize(60);
   fill(255, 0, 0);
   textAlign(CENTER, CENTER);
-  text("GAME OVER", width / 2, height / 3);
+  text("GAME OVER", width/2, height/2);
+}
+
+function restartGame(){ 
+  pipes = [];
+  player = new Player(width/4.5, height/2);
+  score = 0;
+  gameState = true;
+
+  // spawn first pipe instantly
+  frameCount = 0;
+  pipes.push(new Pipe());
+  loop();  // resume the draw loop
 }
 
 
@@ -109,7 +158,7 @@ class Player{
     this.animSpeed = 70;  // how many frames before switching image
     this.currentFrame = 0;
   }
-
+ 
   display(){
     // pick which image to show
     if (frameCount % this.animSpeed < this.animSpeed / 2) {
@@ -121,7 +170,7 @@ class Player{
 
   jump(){
     if (this.onGround) {
-      this.vy = this.jumpForce;  // apply upward velocity
+      this.vy = this.jumpForce; 
       this.onGround = true;
     }
   }
@@ -132,7 +181,7 @@ class Player{
     this.y += this.vy;
 
     // simple ground check
-    if (this.y > height - 50) {   // adjust for sprite height
+    if (this.y > height - 50) {
       this.y = height - 50;
       this.vy = 0;
       this.onGround = true;
@@ -147,6 +196,7 @@ class Pipe {
     this.gap = 200;  // opening between pipes
     this.top = random(100, height - 500);
     this.bottom = this.top + this.gap;
+    this.score = false;
   }
 
   update() {
@@ -157,12 +207,11 @@ class Pipe {
     return this.x < -pUp.width;
   }
 
-  display() {
-    // TOP PIPE (open downward)
+  display(){
+    // TOP PIPE
     image(pDw, this.x, this.top - pUp.height);
 
-    // BOTTOM PIPE (open upward)
+    // BOTTOM PIPE
     image(pUp, this.x, this.bottom);
-
   }
 }
