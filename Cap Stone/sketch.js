@@ -6,13 +6,22 @@
 let bg1; let bg2; let pUp; let pDw;
 let bird1; let bird2; let player; 
 let pipes = []; let score = 0; 
-let gameState = true; let high_Score;
+let gameState = false; let high_Score = 0;
+let gOver; let gameSign; let ready; 
+let tap;
 
 function setup(){
   preLoad();
-  createCanvas(windowWidth, windowHeight);
+  createCanvas(1000, 800);
   player = new Player(width/4.5, height/2);
   pipes.push(new Pipe()); 
+  // local Storage
+  if(localStorage.getItem("highscore")===null){
+    localStorage.setItem("highscore", 0);
+  }
+  else{ // implies a stored number of items
+    totalBounces = int(localStorage.getItem("highscore"));
+  }
 }
 
 async function preLoad(){
@@ -22,23 +31,36 @@ async function preLoad(){
   bird2 = await loadImage("assets.FB/bird2.png");
   pUp = await loadImage("assets.FB/pipe1.png");
   pDw = await loadImage("assets.FB/pipe2.png");
+  gOver = await loadImage("assets.FB/GameOver.png");
+  gameSign =  await loadImage("assets.FB/sign.png");
+  ready = await loadImage("assets.FB/ready.png");
+  tap = await loadImage("assets.FB/taptap.png"); 
 }     
 
 function draw(){
   background(bg1);
 
-  // Pipes
-  pipeloop();
+  if(gameState === true){
+    // Pipes
+    pipeloop();
 
-  // PLAYER 
-  player.update();   
-  player.display();
+    // PLAYER 
+    player.update();   
+    player.display();
 
-  // Main logic 
-  scoreKeeper();
-  highScore();
-  checkCollisions();
+    // Main logic 
+    scoreKeeper();
+    highScore();
+    checkCollisions();
+  }
+  else{
+    image(gameSign, width/3.2, height/3);
+    image(tap, width/2.7, height/2);
+  }
+}
 
+function mousePressed(){
+  gameState = true;
 }
 
 function keyPressed(){
@@ -68,7 +90,10 @@ function scoreKeeper(){
 }
 
 function highScore(){
-
+  if(high_Score < score){
+    high_Score = score;
+    localStorage.setItem("highscore" , high_Score);
+  }
 
   // Draw score on screen
   textSize(48);
@@ -76,7 +101,7 @@ function highScore(){
   stroke(0);
   strokeWeight(4);
   textAlign(LEFT, TOP);
-  text("High Score: " + score, 20, 75);
+  text("High Score: " + high_Score, 20, 75);
 }
 
 function pipeloop(){
@@ -86,7 +111,7 @@ function pipeloop(){
      pipes[i].update();
      pipes[i].display();
      if (pipes[i].offscreen()) pipes.splice(i, 1);
-   }
+   }  
 }
 
 function checkCollisions() {
@@ -127,11 +152,9 @@ function checkCollisions() {
 
 function gameOver(){
   gameState = false;
-  noLoop(); // stop the game
-  textSize(60);
-  fill(255, 0, 0);
-  textAlign(CENTER, CENTER);
-  text("GAME OVER", width/2, height/2);
+  noLoop(); // stops the game
+
+  image(gOver, width/3.2, height/2 - 50);
 }
 
 function restartGame(){ 
