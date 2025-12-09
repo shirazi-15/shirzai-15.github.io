@@ -1,6 +1,6 @@
 // Major Project 
 // Kamran Shirazi
-// 2 Dec to 
+// 2 Dec to 9 Dec
 
 // Global Varible
 let bg1; let bg2; let pUp; let pDw;
