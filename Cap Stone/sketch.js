@@ -15,6 +15,7 @@ function setup(){
   createCanvas(1000, 800);
   player = new Player(width/4.5, height/2);
   pipes.push(new Pipe()); 
+  
   // local Storage
   if(localStorage.getItem("highscore")===null){
     localStorage.setItem("highscore", 0);
@@ -61,6 +62,7 @@ function draw(){
 
 function mousePressed(){
   gameState = true;
+  restartGame();
 }
 
 function keyPressed(){
