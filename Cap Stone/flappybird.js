@@ -21,7 +21,7 @@ function setup(){
     localStorage.setItem("highscore", 0);
   }
   else{ // implies a stored number of items
-    totalBounces = int(localStorage.getItem("highscore"));
+    high_Score = int(localStorage.getItem("highscore"));
   }
 }
 
