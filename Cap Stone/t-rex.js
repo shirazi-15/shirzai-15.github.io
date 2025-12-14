@@ -1,84 +1,92 @@
 // Major Project 
 // Kamran Shirazi
-// 9 Dec to
+// 13 Dec
 
-// Global Varible
-let bg; let gameState;
 
-function setup(){
-  preLoad();
-  createCanvas(1000, 800);
+let groundX = 0;           
+let groundHeight = 20;      
+let maxLineLength = 25;     
+let brokenLineGap = 40;     
+let lineSpacing = 5;   
 
-  
-  // local Storage
-  if(localStorage.getItem("highscore")===null){
-    localStorage.setItem("highscore", 0);
-  }
-  else{ // implies a stored number of items
-    totalBounces = int(localStorage.getItem("highscore"));
-  }
+let player; // Dino instance
+
+function setup() {
+  createCanvas(1000, 800); 
+
+  player = new Dino(100, height - groundHeight - 50); // Dino starting position
 }
 
-async function preLoad(){
-  bg = await loadImage("assets.Tx/platform.png")
+function draw() {
+  background(255); 
 
-}     
+  // Draw scrolling ground
+  drawGround();
 
-function draw(){
-  background();
-  platform();
+  // Update and display Dino
+  player.update();
+  player.display();
 }
 
-function platform(){
-  image(bg, 50, 50);
-}
-
-function keyPressed(){
-  if (keyCode === 32) {
-    if(gameState === false) restartGame();
+function keyPressed() {
+  if (keyCode === 32) { // space key
     player.jump();
   } 
-} 
+}
 
+function drawGround() {
+  stroke(0);
+  strokeWeight(2);
 
-class Dino{
-  constructor(x, y){
+  // Top solid line 
+  line(0, height - groundHeight, width, height - groundHeight);
+
+  let brokenLineIndex = floor(random(1, 4)); 
+  let y = height - groundHeight + brokenLineIndex * lineSpacing;
+
+  let scrollOffset = floor(frameCount / 5) % brokenLineGap; 
+  let x = -scrollOffset;
+
+  while (x < width) {
+    let segmentLength = random(10, maxLineLength);
+    line(x, y, x + segmentLength, y);
+    x += segmentLength + brokenLineGap;
+  }
+}
+
+// Dino class
+class Dino {
+  constructor(x, y) {
     this.x = x;
     this.y = y;
     this.vy = 0;   // vertical velocity
-    this.g = 0.5;  // gravity
-    this.jumpForce = -10;
+    this.g = 0.6;  // gravity
+    this.jumpForce = -12;
     this.onGround = false;
-    this.animSpeed = 70;  // how many frames before switching image
-    this.currentFrame = 0;
-  }
- 
-  display(){
-    // pick which image to show
-    if (frameCount % this.animSpeed < this.animSpeed / 2) {
-      image(bird1, this.x, this.y);
-    } else {
-      image(bird2, this.x, this.y);
-    }
+    this.size = 50;
   }
 
-  jump(){
+  display() {
+    fill(255, 0, 0);
+    rect(this.x, this.y, this.size, this.size); // Dino rectangle
+  }
+
+  jump() {
     if (this.onGround) {
-      this.vy = this.jumpForce; 
-      this.onGround = true;
+      this.vy = this.jumpForce;
+      this.onGround = false;
     }
   }
 
-  update(){
-    // gravity
+  update() {
     this.vy += this.g;
     this.y += this.vy;
 
-    // simple ground check
-    if (this.y > height - 50) {
-      this.y = height - 50;
+    if (this.y + this.size >= height - groundHeight) {
+      this.y = height - groundHeight - this.size;
       this.vy = 0;
       this.onGround = true;
     }
   }
 }
+  

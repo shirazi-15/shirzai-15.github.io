@@ -132,7 +132,6 @@ function checkCollisions() {
     pDw.width, pDw.height
     );
 
-
     // BOTTOM PIPE hitbox
     let hitBottom = collideRectRect(
       player.x, player.y, bw, bh,
