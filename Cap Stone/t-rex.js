@@ -2,23 +2,24 @@
 // Kamran Shirazi
 // 13 Dec
 
-
-let groundX = 0;           
+// Global Variables       
 let groundHeight = 20;      
 let maxLineLength = 25;     
 let brokenLineGap = 40;     
 let lineSpacing = 5;   
+let groundSpeed = 0.3; // smaller = slower
+let groundOffset = 0;
 
 let player; // Dino instance
 
 function setup() {
   createCanvas(1000, 800); 
-
-  player = new Dino(100, height - groundHeight - 50); // Dino starting position
+  player = new Dino(100, height - groundHeight - 50);
 }
 
 function draw() {
   background(255); 
+
 
   // Draw scrolling ground
   drawGround();
@@ -29,7 +30,7 @@ function draw() {
 }
 
 function keyPressed() {
-  if (keyCode === 32) { // space key
+  if (keyCode === 32) { 
     player.jump();
   } 
 }
@@ -38,14 +39,14 @@ function drawGround() {
   stroke(0);
   strokeWeight(2);
 
-  // Top solid line 
+  // Top solid line
   line(0, height - groundHeight, width, height - groundHeight);
 
-  let brokenLineIndex = floor(random(1, 4)); 
+  let brokenLineIndex = floor(random(1, 4));
   let y = height - groundHeight + brokenLineIndex * lineSpacing;
 
-  let scrollOffset = floor(frameCount / 5) % brokenLineGap; 
-  let x = -scrollOffset;
+  groundOffset += groundSpeed;
+  let x = -groundOffset % brokenLineGap;
 
   while (x < width) {
     let segmentLength = random(10, maxLineLength);
