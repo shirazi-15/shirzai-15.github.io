@@ -3,23 +3,22 @@
 // 13 Dec
 
 // Global Variables       
-let groundHeight = 20;      
-let maxLineLength = 25;     
-let brokenLineGap = 40;     
-let lineSpacing = 5;   
-let groundSpeed = 0.3; // smaller = slower
+let groundHeight = 20;
+let maxLineLength = 25;
+let brokenLineGap = 40;
+let lineSpacing = 5;
+let groundSpeed = 0; // smaller = slower
 let groundOffset = 0;
 
 let player; // Dino instance
 
 function setup() {
-  createCanvas(1000, 800); 
+  createCanvas(1000, 800);
   player = new Dino(100, height - groundHeight - 50);
 }
 
 function draw() {
-  background(255); 
-
+  background(255);
 
   // Draw scrolling ground
   drawGround();
@@ -30,9 +29,9 @@ function draw() {
 }
 
 function keyPressed() {
-  if (keyCode === 32) { 
+  if (keyCode === 32) {
     player.jump();
-  } 
+  }
 }
 
 function drawGround() {
@@ -42,13 +41,15 @@ function drawGround() {
   // Top solid line
   line(0, height - groundHeight, width, height - groundHeight);
 
-  let brokenLineIndex = floor(random(1, 4));
-  let y = height - groundHeight + brokenLineIndex * lineSpacing;
-
-  groundOffset += groundSpeed;
-  let x = -groundOffset % brokenLineGap;
+  randomSeed(1);
+  let x = -(frameCount%60);//-groundOffset % brokenLineGap;
 
   while (x < width) {
+    let brokenLineIndex = floor(random(1, 4));
+    let y = height - groundHeight + brokenLineIndex * lineSpacing;
+
+    groundOffset += groundSpeed;
+
     let segmentLength = random(10, maxLineLength);
     line(x, y, x + segmentLength, y);
     x += segmentLength + brokenLineGap;
@@ -90,4 +91,4 @@ class Dino {
     }
   }
 }
-  
+

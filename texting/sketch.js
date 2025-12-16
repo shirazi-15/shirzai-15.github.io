@@ -21,31 +21,17 @@ function setup() {
 
 function draw() {
  
-  populateGrid();
+  find33("33333")
 }
 
-function populateGrid(){
-	let fix; let cc; let cr;
-	for(let y = 0; y < grid.length/2; y++){
-		fix = y % 2;
-		if(fix === 0){
-			cc = 0;
-			cr = 1;
-		}
-		else{
-			cc = 1;
-			cr = 0;
-		} 
-		for(let x = cc; x < grid[y].length; x = x + 2){
-			grid[y][x] = 255;
-		}
-		for(let i = cr; i < grid[y].length; i = i + 2){
-			grid[y][i] = 120;
-		}
+function find33(str){
+	if(str.indexOf("33") === -1){
+	return 0;
 	}
-	for(let j = grid.length/2; j < grid.length; j++){
-		for(let k = 0; k < grid[j].length; k++){
-			grid[j][k] = 0;
-		}
+	else{
+	if(str.slice(1, 2) === "33"){
+	return 1 + find33(str.slice(1));
 	}
-} 
+	else return find33(str.slice(1));
+	}
+	}
