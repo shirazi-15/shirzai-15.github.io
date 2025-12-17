@@ -3,92 +3,137 @@
 // 13 Dec
 
 // Global Variables       
-let groundHeight = 20;
-let maxLineLength = 25;
-let brokenLineGap = 40;
-let lineSpacing = 5;
-let groundSpeed = 0; // smaller = slower
-let groundOffset = 0;
-
+let groundHeight = 20; ;let brokenLineGap = 40;
+let groundOffset = 0; let groundSpeed = 1.5;  
+let lineSpacing = 4; let dashLength = 18; 
+let dashGap = 42; let gameState = false;
+let run1; let run2;
 let player; // Dino instance
 
-function setup() {
+function setup(){
   createCanvas(1000, 800);
-  player = new Dino(100, height - groundHeight - 50);
+  player = new Dino(100);
 }
 
-function draw() {
+function preload(){
+  run1 = loadImage("assets.Tx/run1.png");
+  run2 = loadImage("assets.Tx/run2.png");
+  idel = loadImage("assets.Tx/idel.png");
+  ob1 = loadImage("assets.Tx/ob1.png");
+}
+
+function draw(){
   background(255);
+  
+  if(gameState === true){
+    // Draw scrolling ground
+    drawGround();
 
-  // Draw scrolling ground
-  drawGround();
+    // Update and display Dino
+    player.update();
+    player.display();
+    groundSpeed += 0.0003;
+  }
+  else{
+    image(idel, 100, 705);
+  }
 
-  // Update and display Dino
-  player.update();
-  player.display();
 }
 
-function keyPressed() {
+function keyPressed(){
   if (keyCode === 32) {
     player.jump();
+    if(gameState === false) gameState = true;
   }
 }
 
-function drawGround() {
+function mousePressed(){
+  if(gameState === false){
+    gameState = true;
+  }
+}
+function drawGround(){
   stroke(0);
   strokeWeight(2);
 
-  // Top solid line
-  line(0, height - groundHeight, width, height - groundHeight);
+  let groundY = height - groundHeight;
 
-  randomSeed(1);
-  let x = -(frameCount%60);//-groundOffset % brokenLineGap;
+  // solid top line
+  line(0, groundY, width, groundY);
 
-  while (x < width) {
-    let brokenLineIndex = floor(random(1, 4));
-    let y = height - groundHeight + brokenLineIndex * lineSpacing;
+  // move ground
+  groundOffset -= groundSpeed;
+  if (groundOffset <= -width) {
+    groundOffset = 0;
+  }
 
-    groundOffset += groundSpeed;
+  let dashLength = 20;
+  let dashGap = 40;
 
-    let segmentLength = random(10, maxLineLength);
-    line(x, y, x + segmentLength, y);
-    x += segmentLength + brokenLineGap;
+  randomSeed(1); // keeps height pattern fixed
+
+  for (let x = groundOffset; x < width; x += dashLength + dashGap) {
+    // choose ONE height per segment
+    let yOffset = floor(random(1, 4)) * lineSpacing;
+    let dashY = groundY + yOffset;
+
+    line(x, dashY, x + dashLength, dashY);
   }
 }
 
-// Dino class
 class Dino {
-  constructor(x, y) {
+  constructor(x){
     this.x = x;
-    this.y = y;
-    this.vy = 0;   // vertical velocity
-    this.g = 0.6;  // gravity
-    this.jumpForce = -12;
-    this.onGround = false;
-    this.size = 50;
+
+    this.w = run1.width;
+    this.h = run1.height*0.85;
+
+    // PERFECT ground placement
+    this.y = height - groundHeight - this.h;
+
+    this.vy = 0;
+    this.g = 0.8;
+    this.jumpForce = -15;
+    this.onGround = true;
+    this.animSpeed = 50;
   }
 
-  display() {
-    fill(255, 0, 0);
-    rect(this.x, this.y, this.size, this.size); // Dino rectangle
+  update(){
+    this.vy += this.g;
+    this.y += this.vy;
+
+    if (this.y >= height - groundHeight - this.h) {
+      this.y = height - groundHeight - this.h;
+      this.vy = 0;
+      this.onGround = true;
+    }
   }
 
-  jump() {
+  jump(){
     if (this.onGround) {
       this.vy = this.jumpForce;
       this.onGround = false;
     }
   }
 
-  update() {
-    this.vy += this.g;
-    this.y += this.vy;
-
-    if (this.y + this.size >= height - groundHeight) {
-      this.y = height - groundHeight - this.size;
-      this.vy = 0;
-      this.onGround = true;
+  display(){
+    if (frameCount % this.animSpeed < this.animSpeed / 2) {
+      image(run1, this.x, this.y);
+    } else {
+      image(run2, this.x, this.y);
     }
   }
 }
 
+class Cbstacle{
+  constructor(x){
+    this.x = x;
+    this.choice = [1, 2, 3];
+    this.ob = random(this.choice);
+  }
+  display(){
+    if(this.ob === 1){
+      image(ob1, this.x, this.y);
+    }
+  }
+}
