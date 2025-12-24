@@ -3,17 +3,11 @@
 // 13 Dec
 
 // Global Variables       
-let groundHeight = 20; ;let brokenLineGap = 40;
-let groundOffset = 0; let groundSpeed = 1.5;  
-let lineSpacing = 4; let dashLength = 18; 
-let dashGap = 42; let gameState = false;
-let run1; let run2;
-let player; // Dino instance
-
-function setup(){
-  createCanvas(1000, 800);
-  player = new Dino(100);
-}
+let groundHeight = 20; let groundOffset = 0; 
+let groundSpeed = 8; let lineSpacing = 4; 
+let gameState = false; let run1, run2, idel, ob1;
+let obstacles = []; let nextSpawn = 0;
+let player; 
 
 function preload(){
   run1 = loadImage("assets.Tx/run1.png");
@@ -22,87 +16,119 @@ function preload(){
   ob1 = loadImage("assets.Tx/ob1.png");
 }
 
+function setup(){
+  createCanvas(1000, 800);
+  player = new Dino(100);
+}
+
 function draw(){
   background(255);
   
   if(gameState === true){
-    // Draw scrolling ground
     drawGround();
-
-    // Update and display Dino
     player.update();
     player.display();
+    
     groundSpeed += 0.0003;
+
+    if (frameCount > nextSpawn){
+      obstacles.push(new Obstacle(width, groundSpeed, ob1)); 
+      nextSpawn = frameCount + random(60, 120);
+    }
+
+    for (let i = obstacles.length - 1; i >= 0; i--){
+      obstacles[i].move();
+      obstacles[i].display();
+
+      if (obstacles[i].offScreen()){
+        obstacles.splice(i, 1);
+      }
+    }
+
+    handleCollisions();
   }
   else{
-    image(idel, 100, 705);
+    let idelY = height - groundHeight - 60;
+    image(idel, 100, idelY, 60, 60);
+    
+    textAlign(CENTER);
+    textSize(25);
+    fill(100);
+    text("Press SPACE to Start", width/2, height/2);
   }
+}
 
+function handleCollisions() {
+  for (let obs of obstacles) {
+    if (obs.hits(player)) {
+      gameState = false;
+      gameOver();
+    }
+  }
+}
+
+function gameOver() {
+  noLoop(); 
+  push();
+  textAlign(CENTER);
+  textSize(40);
+  text("GAME OVER", width/2, height/2);
+  pop();
 }
 
 function keyPressed(){
   if (keyCode === 32) {
-    player.jump();
-    if(gameState === false) gameState = true;
+    if(gameState === false){
+      restartGame(); 
+    } else {
+      player.jump();
+    }
   }
 }
 
-function mousePressed(){
-  if(gameState === false){
-    gameState = true;
-  }
+function restartGame(){
+  groundSpeed = 8;
+  obstacles = [];
+  nextSpawn = frameCount + 60;
+  player.y = height - groundHeight - player.h;
+  player.vy = 0;
+  gameState = true;
+  loop(); 
 }
+
 function drawGround(){
-  stroke(0);
+  stroke(150);
   strokeWeight(2);
-
   let groundY = height - groundHeight;
-
-  // solid top line
   line(0, groundY, width, groundY);
-
-  // move ground
+  
   groundOffset -= groundSpeed;
-  if (groundOffset <= -width) {
-    groundOffset = 0;
-  }
-
-  let dashLength = 20;
-  let dashGap = 40;
-
-  randomSeed(1); // keeps height pattern fixed
-
-  for (let x = groundOffset; x < width; x += dashLength + dashGap) {
-    // choose ONE height per segment
+  if(groundOffset <= -width) groundOffset = 0;
+  
+  randomSeed(1); 
+  for(let x = groundOffset; x < width + 100; x += 60){
     let yOffset = floor(random(1, 4)) * lineSpacing;
     let dashY = groundY + yOffset;
-
-    line(x, dashY, x + dashLength, dashY);
+    line(x, dashY, x + 20, dashY);
   }
 }
 
 class Dino {
   constructor(x){
     this.x = x;
-
-    this.w = run1.width;
-    this.h = run1.height*0.85;
-
-    // PERFECT ground placement
+    this.w = 45; // Hitbox width
+    this.h = 50; // Hitbox height
     this.y = height - groundHeight - this.h;
-
     this.vy = 0;
     this.g = 0.8;
     this.jumpForce = -15;
     this.onGround = true;
-    this.animSpeed = 50;
   }
 
   update(){
     this.vy += this.g;
     this.y += this.vy;
-
-    if (this.y >= height - groundHeight - this.h) {
+    if(this.y >= height - groundHeight - this.h){
       this.y = height - groundHeight - this.h;
       this.vy = 0;
       this.onGround = true;
@@ -110,30 +136,45 @@ class Dino {
   }
 
   jump(){
-    if (this.onGround) {
+    if(this.onGround){
       this.vy = this.jumpForce;
       this.onGround = false;
     }
   }
 
   display(){
-    if (frameCount % this.animSpeed < this.animSpeed / 2) {
-      image(run1, this.x, this.y);
-    } else {
-      image(run2, this.x, this.y);
-    }
+    let img = (frameCount % 20 < 10) ? run1 : run2;
+    image(img, this.x, this.y, this.w, this.h);
   }
 }
 
-class Cbstacle{
-  constructor(x){
+class Obstacle {
+  constructor(x, speed, img){
+    this.img = img;
+    this.speed = speed;
     this.x = x;
-    this.choice = [1, 2, 3];
-    this.ob = random(this.choice);
+    this.h = 50;
+    let aspect = this.img.width / this.img.height;
+    this.w = this.h * aspect;
+    this.y = height - groundHeight - this.h;
   }
+
+  move(){
+    this.x -= this.speed;
+  }
+
   display(){
-    if(this.ob === 1){
-      image(ob1, this.x, this.y);
-    }
+    image(this.img, this.x, this.y, this.w, this.h);
+  }
+
+  offScreen(){
+    return this.x < -this.w;
+  }
+  
+  hits(dino){
+    return collideRectRect(
+      this.x + 4, this.y + 4, this.w - 8, this.h - 8,
+      dino.x + 4, dino.y + 4, dino.w - 8, dino.h - 8
+    );
   }
 }
