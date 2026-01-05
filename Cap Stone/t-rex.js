@@ -134,7 +134,7 @@ function handleCollisions(){
   }
 }
 
-function restartGame() {
+function restartGame(){
   // 1. Reset Game State
   score = 0;
   groundSpeed = 8;
@@ -151,12 +151,13 @@ function restartGame() {
   loop(); 
 }
 
-function keyPressed() {
-  if (keyCode === 32) { // Space bar
-    if (gameState === false) {
+function keyPressed(){
+  if(keyCode === 32){ // Space bar
+    if(gameState === false){
       // If we are on the Game Over screen or Start screen
       restartGame(); 
-    } else {
+    } 
+    else{
       // If the game is already running
       player.jump();
     }
