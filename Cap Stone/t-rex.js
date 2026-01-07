@@ -9,7 +9,7 @@ let groundSpeed = 8;
 let lineSpacing = 4; 
 let gameState = false; 
 let score = 0;
-let highScore = 0;
+let highscore = 0;
 let run1, run2, idel, ob1, clouds, pd, ob2, ob3;
 let obstacles = []; 
 let cloudsArr = []; 
@@ -37,11 +37,11 @@ function setup(){
   }
 
   // local Storage
-  if(localStorage.getItem("highscore")===null){
-    localStorage.setItem("highscore", 0);
+  if(localStorage.getItem("highscore_Tx")===null){
+    localStorage.setItem("highscore_Tx", 0);
   }
   else{ // implies a stored number of items
-    highScore = int(localStorage.getItem("highscore"));
+    highscore = int(localStorage.getItem("highscore_Tx"));
   }
 }
 
@@ -111,14 +111,14 @@ function drawScore(){
   fill(83);
   textSize(20);
   textFont('Courier New');
-  text("HI " + nf(highScore, 5) + "  " + nf(score, 5), width - 50, 50);
+  text("HI " + nf(highascore, 5) + "  " + nf(score, 5), width - 50, 50);
   pop();
 }
 
 function scoreKeeping(){
-  if(highScore < score){
-    highScore = score;
-    localStorage.setItem("highscore" , highScore);
+  if(highscore < score){
+    highscore = score;
+    localStorage.setItem("highscore_Tx" , highscore);
   }   
 }
 
