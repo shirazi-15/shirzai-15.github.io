@@ -31,16 +31,13 @@ function setup(){
   createCanvas(1000, 800);
   player = new Dino(100);
   
-  // Initialize Clouds
   for(let i = 0; i < 5; i++){
     cloudsArr.push(new Cloud(random(width), random(50, 200)));
   }
 
-  // local Storage
-  if(localStorage.getItem("highscore_Tx")===null){
+  if(localStorage.getItem("highscore_Tx") === null){
     localStorage.setItem("highscore_Tx", 0);
-  }
-  else{ // implies a stored number of items
+  } else {
     highscore = int(localStorage.getItem("highscore_Tx"));
   }
 }
@@ -48,24 +45,23 @@ function setup(){
 function draw(){
   background(245);
   
-  // Draw clouds
   for(let c of cloudsArr){
-    c.move();
+    if(gameState === true) {
+      c.move();
+    }
     c.display();
   }
 
   if(gameState === true){
     drawGround();
 
-    // the chunck that controls the ob spawn 
     if(frameCount > nextSpawn){
       let obImages = [ob1, ob2, ob3];
       let randomImg = random(obImages);
       obstacles.push(new Obstacle(width, groundSpeed, randomImg)); 
-      nextSpawn = frameCount + random(40, 90); // Calculates the didtance between each ob
+      nextSpawn = frameCount + random(40, 90); 
     }
 
-    // Update obstacles
     for(let i = obstacles.length - 1; i >= 0; i--){
       obstacles[i].move();
       obstacles[i].display();
@@ -77,88 +73,80 @@ function draw(){
     player.update();
     player.display();
     
-    // Increase difficulty and score
-    if(frameCount % 5 === 0) score++;
+    // --- UPDATED SCORE LOGIC ---
+    // Increase score exactly every 60 frames (1 second at 60FPS)
+    if(frameCount % 60 === 0) {
+      score++;
+    }
+    
     groundSpeed += 0.0003;
     drawScore();
-    
     handleCollisions();
   }
-
-  else{
-    // Initial screen 
-    let idelY = height - groundHeight - 40;
+  else {
+    drawGround();
+    let idelY = height - groundHeight - 40; 
     let imgToShow = (score > 0) ? pd : idel;
     image(imgToShow, 100, idelY, 60, 60);
     
     textAlign(CENTER);
     textSize(25);
     fill(100);
+    
     if(score === 0){
       text("Press SPACE to Start", width/2, height/2);
-    }
-
-    else{
-     
+    } else {
+      text("GAME OVER", width/2, height/2 - 20);
+      text("Press SPACE to Restart", width/2, height/2 + 20);
+      drawScore();
     }
   }
 }
 
 function drawScore(){
-  // Calculates the score based on time
   push();
   textAlign(RIGHT);
   fill(83);
   textSize(20);
   textFont('Courier New');
-  text("HI " + nf(highascore, 5) + "  " + nf(score, 5), width - 50, 50);
+  text("HI " + nf(highscore, 5) + "  " + nf(score, 5), width - 50, 50);
   pop();
 }
 
 function scoreKeeping(){
-  if(highscore < score){
+  if(score > highscore){
     highscore = score;
-    localStorage.setItem("highscore_Tx" , highscore);
+    localStorage.setItem("highscore_Tx", highscore);
   }   
 }
 
 function handleCollisions(){
   for(let obs of obstacles){
     if(obs.hits(player)){
-      scoreKeeping(); // Save the high score right at the moment of impact
+      scoreKeeping(); 
       gameState = false;
-      text("GAME OVER", width/2, height/2);
-      drawScore();
       noLoop(); 
     }
   }
 }
 
 function restartGame(){
-  // 1. Reset Game State
   score = 0;
   groundSpeed = 8;
   obstacles = [];
   nextSpawn = frameCount + 60;
-  
-  // 2. Reset Player Position
   player.y = height - groundHeight/2 - player.h;
   player.vy = 0;
   player.onGround = true;
-  
-  // 3. Re-activate the loop
   gameState = true;
   loop(); 
 }
 
 function keyPressed(){
-  if(keyCode === 32){ // Space bar
+  if(keyCode === 32){ 
     if(gameState === false){
-      // If we are on the Game Over screen or Start screen
       restartGame(); 
-    } 
-    else{
-      // If the game is already running
+    } else {
       player.jump();
     }
   }
@@ -170,12 +158,10 @@ function drawGround(){
   let groundY = height - groundHeight;
   line(0, groundY, width, groundY);
   
-  // Upper ground layer
   if(gameState) groundOffset -= groundSpeed;
   let spacing = 40;
   let relativeOffset = groundOffset % spacing;
 
-  // Lower dashes (moving ground)
   for(let x = relativeOffset; x < width + spacing; x += spacing){
     let worldX = x - groundOffset;
     let dashId = floor(worldX / spacing);
@@ -184,7 +170,6 @@ function drawGround(){
   }
 }
 
-// Player Class: Controls the player animation, jump and other basics functions
 class Dino{
   constructor(x){
     this.x = x;
@@ -192,8 +177,8 @@ class Dino{
     this.h = 50;
     this.y = height - groundHeight/2 - this.h;
     this.vy = 0;
-    this.g = 0.8; // g force 
-    this.jumpForce = -15; // jump force 
+    this.g = 0.8; 
+    this.jumpForce = -15; 
     this.onGround = true;
   }
 
@@ -216,7 +201,6 @@ class Dino{
   }
 
   display(){
-    // Animation of the dino because of the frame rate
     let img;
     if(!gameState && score > 0) img = pd;
     else if(this.onGround) img = (frameCount % 20 < 10) ? run1 : run2;
@@ -230,7 +214,7 @@ class Obstacle{
     this.img = img;
     this.speed = speed;
     this.x = x;
-    this.h = (img === ob2 || img === ob3) ? 65 : 50; // ob2, 3 are widde the ob1 hence diff settings 
+    this.h = (img === ob2 || img === ob3) ? 65 : 50; 
     let aspect = this.img.width / this.img.height;
     this.w = this.h * aspect;
     this.y = height - groundHeight/4 - this.h;
@@ -241,7 +225,7 @@ class Obstacle{
   }
 
   display(){ 
-    image(this.img, this.x, this.y, this.w, this.h); // display Ob 
+    image(this.img, this.x, this.y, this.w, this.h); 
   }
 
   offScreen(){
@@ -249,10 +233,9 @@ class Obstacle{
   }
   
   hits(dino){
-    // Controls the collision in the game
     return collideRectRect(
-      this.x + 4, this.y + 4, this.w - 8, this.h - 8,
-      dino.x + 4, dino.y + 4, dino.w - 8, dino.h - 8
+      this.x + 5, this.y + 5, this.w - 10, this.h - 10,
+      dino.x + 5, dino.y + 5, dino.w - 10, dino.h - 10
     );
   }
 }
@@ -267,7 +250,6 @@ class Cloud{
   }
 
   move(){
-    // fixed speed 
     this.x -= this.speed;
     if (this.x < -this.w) this.x = width + random(50, 400);
   }
@@ -275,10 +257,4 @@ class Cloud{
   display(){ 
     image(clouds, this.x, this.y, this.w, this.h);
    }
-
-  overlaps(other){
-    // Prevents overlap of clouds 
-    let padding = 40; 
-    return abs(this.x - other.x) < this.w + padding && abs(this.y - other.y) < this.h + padding;
-  }
 }
