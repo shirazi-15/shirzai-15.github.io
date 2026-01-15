@@ -58,7 +58,7 @@ function draw(){
     if(frameCount > nextSpawn){
       let obImages = [ob1, ob2, ob3];
       let randomImg = random(obImages);
-      obstacles.push(new Obstacle(width, groundSpeed, randomImg)); 
+      obstacles.push(new Aamish(width, groundSpeed, randomImg)); 
       nextSpawn = frameCount + random(40, 90); 
     }
 
@@ -209,7 +209,7 @@ class Dino{
   }
 }
 
-class Obstacle{
+class Aamish{
   constructor(x, speed, img){
     this.img = img;
     this.speed = speed;

@@ -17,8 +17,8 @@ function setup(){
   pipes.push(new Pipe()); 
   
   // local Storage
-  if(localStorage.getItem("highscore")===null){
-    localStorage.setItem("highscore", 0);
+  if(localStorage.getItem("highscore_FB")===null){
+    localStorage.setItem("highscore_FB", 0);
   }
   else{ // implies a stored number of items
     high_Score = int(localStorage.getItem("highscore"));
@@ -94,7 +94,7 @@ function scoreKeeper(){
 function highScore(){
   if(high_Score < score){
     high_Score = score;
-    localStorage.setItem("highscore" , high_Score);
+    localStorage.setItem("highscore_FB" , high_Score);
   }
 
   // Draw score on screen

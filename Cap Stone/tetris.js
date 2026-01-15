@@ -10,6 +10,7 @@ let cols = 12;
 let activePiece;
 let score = 0;
 let isGameOver = false;
+let highscore_TT;
 
 // All 7 Tetromino shapes defined as matrices
 const SHAPES = [
@@ -26,6 +27,14 @@ function setup() {
   createCanvas(squareSize * cols, squareSize * rows);
   clearGrid();
   activePiece = new Block(); 
+
+  // local Storage
+  if(localStorage.getItem("highscore_TT")===null){
+    localStorage.setItem("highscore_TT", 0);
+  }
+  else{ // implies a stored number of items
+    high_Score = int(localStorage.getItem("highscore_TT"));
+  }
 }
 
 function draw() {
@@ -132,6 +141,12 @@ function drawScore() {
   textSize(20);
   textAlign(LEFT);
   text("Score: " + score, 15, 30);
+
+  if(highscore_TT < score){
+    highscore_TT = score;
+    localStorage.setItem("highscore_TT" , highscore_TT);
+  }
+
 }
 
 function displayGameOver() {
@@ -144,7 +159,7 @@ function displayGameOver() {
   text("GAME OVER", width / 2, height / 2 - 60);
   fill(255);
   textSize(32);
-  text("Score: " + score, width / 2, height / 2 + 10);
+  text("HIgh Score: " + highscore_TT, width / 2, height / 2 + 10);
   textSize(16);
   fill(200);
   text("Press SPACE to Play Again", width / 2, height / 2 + 70);

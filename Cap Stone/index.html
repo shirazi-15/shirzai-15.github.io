@@ -1,24 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
+<head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            background-color: #5a2d91; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
 
-    <title>Menu</title>
+        /* This container ensures the links stay relative to the image */
+        .game-container {
+            position: relative;
+            width: 90%;            /* Responsive width */
+            max-width: 1000px;     /* Maximum size on desktop */
+            line-height: 0;        /* Removes unwanted spacing below image */
+        }
 
-    
-  </head>
+        .game-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
 
-  <body>
-    <!-- <a href = "flappy.html">Flappy Bird</a> 
-    <br>
-    <a href="Trex.html">Chrome T-rex</a>
-    <br>
-    <a href="tetris.html">Tetris</a>
-    <br>
-    <a href="Puzzle.html">Puzzle</a>
-    <br>
-    <a href="tictak.html">tic-tak-toe</a> -->
-    <img src="asstes.GB/Game_Boy.png" alt="" style="width: 60%; height: 80%;">
-  </body>
+        /* The invisible hitboxes */
+        .hitbox {
+            position: absolute;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .hitbox:hover {
+            background-color: rgba(255, 255, 255, 0.1); /* Subtle glow on hover */
+            transform: scale(1.05);
+        }
+
+        /* Coordinates based on percentages of the image */
+        #game1 {top: 40%; left: 7%;  width: 15%; height: 28%; transform: rotate(22deg);}
+        #game2 {top: 11%; left: 43%; width: 15%; height: 25%; transform: rotate(23deg);}
+        #game3 {top: 27%; left: 68%; width: 15%; height: 28%; transform: rotate(-33deg);}
+        #game4 {top: 27%; left: 22.5%;  width: 15%; height: 28%;}
+        #game5 {top: 87%; left: 8%;  width: 19%; height: 7%;} /* Flat cartridge on floor */
+
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+    <img src="asstes.GB/game_boy.png" alt="">
+    <a href="flappy.html" class="hitbox" id="game1"></a>
+    <a href="Trex.html" class="hitbox" id="game2"></a>
+    <a href="tetris.html" class="hitbox" id="game3"></a>
+    <a href="Puzzle.html" class="hitbox" id="game4"></a>
+    <a href="Puzzle.html" class="hitbox" id="game5"></a>
+</div>
+</body>
 </html>
