@@ -23,7 +23,7 @@ const SHAPES = [
   [[0, 0, 1], [1, 1, 1]]  // L
 ];
 
-function setup() {
+function setup(){
   createCanvas(squareSize * cols, squareSize * rows);
   clearGrid();
   activePiece = new Block(); 
@@ -33,20 +33,20 @@ function setup() {
     localStorage.setItem("highscore_TT", 0);
   }
   else{ // implies a stored number of items
-    high_Score = int(localStorage.getItem("highscore_TT"));
+    highscore_TT = int(localStorage.getItem("highscore_TT"));
   }
 }
 
-function draw() {
+function draw(){
   background(220);
   renderGrid();
 
-  if (isGameOver) {
+  if(isGameOver){
     displayGameOver();
     return; 
   }
 
-  if (activePiece) {  
+  if(activePiece){  
     let targetX = floor(mouseX / squareSize);
     let maxCol = cols - activePiece.shape[0].length;
     targetX = constrain(targetX, 0, maxCol);
@@ -54,8 +54,8 @@ function draw() {
     
     activePiece.show();
 
-    if (frameCount % 30 === 0) {
-      if (!activePiece.moveDown()) {
+    if(frameCount % 30 === 0){
+      if(!activePiece.moveDown()){
         lockPiece();
         checkLines();
         activePiece = new Block(); 

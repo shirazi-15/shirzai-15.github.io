@@ -95,7 +95,8 @@ function draw(){
     
     if(score === 0){
       text("Press SPACE to Start", width/2, height/2);
-    } else {
+    } 
+    else {
       text("GAME OVER", width/2, height/2 - 20);
       text("Press SPACE to Restart", width/2, height/2 + 20);
       drawScore();
