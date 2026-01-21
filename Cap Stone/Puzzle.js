@@ -1,6 +1,6 @@
 // Major Project 
 // Kamran Shirazi
-// 
+// 8 jan to 19 jan
 
 // Global Variables       
 let cats = []; 
@@ -15,29 +15,29 @@ let level = 1;
 let isWon = false;
 let gameFinished = false; // New state for the trophy screen
 
-function preload() {
+function preload(){
   cats.push(loadImage("assets.Pu/cat1.png"));
   cats.push(loadImage("assets.Pu/cat2.png"));
   cats.push(loadImage("assets.Pu/cat3.png"));
   cats.push(loadImage("assets.Pu/cat4.png"));
 }
 
-function setup() {
+function setup(){
   createCanvas(512, 512);
   img = cats[0]; 
   initLevel();
 }
 
-function initLevel() {
+function initLevel(){
   tiles = [];
   w = width / cols;
   h = height / rows;
   img.resize(width, height);
   emptyTile = { x: cols - 1, y: rows - 1 };
 
-  for (let y = 0; y < rows; y++) {
-    for (let x = 0; x < cols; x++) {
-      if (!(x === cols - 1 && y === rows - 1)) {
+  for(let y = 0; y < rows; y++){
+    for (let x = 0; x < cols; x++){
+      if(!(x === cols - 1 && y === rows - 1)){
         let tileImg = img.get(x * w, y * h, w, h);
         tiles.push({ img: tileImg, x: x, y: y, originX: x, originY: y });
       }
@@ -46,15 +46,15 @@ function initLevel() {
   shuffleTiles();
 }
 
-function draw() {
+function draw(){
   background(220);
 
-  if (gameFinished) {
+  if(gameFinished){
     drawTrophyScreen();
     return;
   }
 
-  for (let i = 0; i < tiles.length; i++) {
+  for(let i = 0; i < tiles.length; i++){
     let tile = tiles[i];
     image(tile.img, tile.x * w, tile.y * h, w, h);
     noFill();
@@ -72,22 +72,23 @@ function draw() {
   text("Cat Level: " + level + "/4", 10, 10);
   text("Moves: " + moveCount, 10, 30);
 
-  if (isWon) drawVictoryScreen();
+  if(isWon) drawVictoryScreen();
 }
 
-function nextLevel() {
-  if (level < 4) {
+function nextLevel(){
+  if(level < 4){
     level++;
     moveCount = 0;
     isWon = false;
     img = cats[level - 1];
     initLevel();
-  } else {
+  } 
+  else{
     gameFinished = true; // Trigger trophy!
   }
 }
 
-function drawTrophyScreen() {
+function drawTrophyScreen(){
   fill(0, 200);
   rect(0, 0, width, height);
   
@@ -123,14 +124,17 @@ function drawTrophyScreen() {
 
 // --- CONTROLS ---
 
-function mousePressed() {
-  if (gameFinished) return;
-  if (isWon) { nextLevel(); return; }
-  
+function mousePressed(){
+  if(gameFinished) return;
+  if(isWon){ 
+    nextLevel();
+    return;
+  }
+  // controls 
   let x = floor(mouseX / w);
   let y = floor(mouseY / h);
   let clicked = tiles.find(t => t.x === x && t.y === y);
-  if (clicked && isAdjacent(clicked, emptyTile)) {
+  if(clicked && isAdjacent(clicked, emptyTile)){
     let temp = { x: clicked.x, y: clicked.y };
     clicked.x = emptyTile.x;
     clicked.y = emptyTile.y;
@@ -140,8 +144,8 @@ function mousePressed() {
   }
 }
 
-function keyPressed() {
-  if (key === 'r' || key === 'R') {
+function keyPressed(){
+  if(key === 'r' || key === 'R'){
     level = 1;
     moveCount = 0;
     isWon = false;
@@ -149,31 +153,33 @@ function keyPressed() {
     img = cats[0];
     initLevel();
   }
-  if (gameFinished) return;
-  if (keyIsDown(SHIFT) && keyCode === 32) nextLevel();
-  else if (keyCode === SHIFT) autoSolve();
+  if(gameFinished) return;
+  if(keyIsDown(SHIFT) && keyCode === 32) nextLevel();
+  else if(keyCode === SHIFT) autoSolve();
 }
 
-function autoSolve() {
-  for (let t of tiles) { t.x = t.originX; t.y = t.originY; }
+function autoSolve(){
+  // So people can actually mnove forward 
+  for(let t of tiles){ t.x = t.originX; t.y = t.originY; }
   emptyTile.x = cols - 1;
   emptyTile.y = rows - 1;
   checkWin();
 }
 
-function isAdjacent(a, b) {
+function isAdjacent(a, b){
   return (abs(a.x - b.x) + abs(a.y - b.y) === 1);
 }
 
-function checkWin() {
+function checkWin(){ // win detection
   let match = true;
-  for (let t of tiles) {
+  for(let t of tiles){
     if (t.x !== t.originX || t.y !== t.originY) { match = false; break; }
   }
-  if (match) isWon = true;
+  if(match) isWon = true;
 }
 
-function drawVictoryScreen() {
+function drawVictoryScreen(){
+  // you win
   fill(0, 220);
   rect(0, 0, width, height);
   fill(255);
@@ -184,12 +190,13 @@ function drawVictoryScreen() {
   text("Click for the next challenge", width/2, height/2 + 30);
 }
 
-function shuffleTiles() {
-  for (let i = 0; i < 150; i++) {
+function shuffleTiles(){
+  // shuffles the img make the game 
+  for(let i = 0; i < 150; i++){
     let neighbors = getNeighbors(emptyTile);
     let choice = random(neighbors);
     let tile = tiles.find(t => t.x === choice.x && t.y === choice.y);
-    if (tile) {
+    if(tile){
       let temp = { x: tile.x, y: tile.y };
       tile.x = emptyTile.x;
       tile.y = emptyTile.y;
@@ -198,11 +205,12 @@ function shuffleTiles() {
   }
 }
 
-function getNeighbors(pos) {
+function getNeighbors(pos){
+  // position
   let n = [];
-  if (pos.x > 0) n.push({ x: pos.x - 1, y: pos.y });
-  if (pos.x < cols - 1) n.push({ x: pos.x + 1, y: pos.y });
-  if (pos.y > 0) n.push({ x: pos.x, y: pos.y - 1 });
-  if (pos.y < rows - 1) n.push({ x: pos.x, y: pos.y + 1 });
+  if(pos.x > 0) n.push({ x: pos.x - 1, y: pos.y });
+  if(pos.x < cols - 1) n.push({ x: pos.x + 1, y: pos.y });
+  if(pos.y > 0) n.push({ x: pos.x, y: pos.y - 1 });
+  if(pos.y < rows - 1) n.push({ x: pos.x, y: pos.y + 1 });
   return n;
 }

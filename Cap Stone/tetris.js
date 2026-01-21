@@ -66,16 +66,16 @@ function draw(){
   drawScore();
 }
 
-// --- INPUT HANDLING ---
-function mousePressed() {
-  if (activePiece && !isGameOver) {
+// INPUT HANDLING
+function mousePressed(){
+  if(activePiece && !isGameOver){
     activePiece.rotate();
   }
 }
 
-function keyPressed() {
+function keyPressed(){
   // If Space is pressed (keyCode 32)
-  if (keyCode === 32) {
+  if(keyCode === 32){
     score = 0;
     isGameOver = false;
     clearGrid();
@@ -88,14 +88,14 @@ function keyPressed() {
 }
 
 // --- GAME LOGIC FUNCTIONS ---
-function clearGrid() {
+function clearGrid(){
   // Initialize grid with 255 (white)
   grid = Array.from({ length: rows }, () => Array(cols).fill(255));
 }
 
-function renderGrid() {
-  for (let y = 0; y < rows; y++) {
-    for (let x = 0; x < cols; x++) {
+function renderGrid(){
+  for(let y = 0; y < rows; y++) {
+    for(let x = 0; x < cols; x++) {
       fill(grid[y][x]);
       stroke(200);
       square(x * squareSize, y * squareSize, squareSize);
@@ -103,13 +103,14 @@ function renderGrid() {
   }
 }
 
-function lockPiece() {
-  for (let r = 0; r < activePiece.shape.length; r++) {
-    for (let c = 0; c < activePiece.shape[r].length; c++) {
-      if (activePiece.shape[r][c] === 1) {
+function lockPiece(){
+  // No block going down 
+  for(let r = 0; r < activePiece.shape.length; r++){
+    for(let c = 0; c < activePiece.shape[r].length; c++){
+      if(activePiece.shape[r][c] === 1){
         let gridY = activePiece.y + r;
         let gridX = activePiece.x + c;
-        if (gridY >= 0 && gridY < rows) {
+        if(gridY >= 0 && gridY < rows){
           grid[gridY][gridX] = activePiece.blockColor;
         }
       }
@@ -117,11 +118,12 @@ function lockPiece() {
   }
 }
 
-function checkLines() {
-  for (let y = rows - 1; y >= 0; y--) {
+function checkLines(){
+  // score and line claer 
+  for(let y = rows - 1; y >= 0; y--){
     let isFull = true;
-    for (let x = 0; x < cols; x++) {
-      if (grid[y][x] === 255) {
+    for(let x = 0; x < cols; x++){
+      if(grid[y][x] === 255){
         isFull = false;
         break;
       }
@@ -135,7 +137,8 @@ function checkLines() {
   }
 }
 
-function drawScore() {
+function drawScore(){
+  // high score will only be shown on the end screen 
   fill(0);
   noStroke();
   textSize(20);
@@ -149,7 +152,8 @@ function drawScore() {
 
 }
 
-function displayGameOver() {
+function displayGameOver(){
+  // dispalys high score
   fill(0, 180); 
   rect(0, 0, width, height);
   textAlign(CENTER, CENTER);

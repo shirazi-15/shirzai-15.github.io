@@ -108,7 +108,7 @@ function highScore(){
 
 function pipeloop(){
    // PIPE LOGIC
-   if (frameCount % 180 === 0) pipes.push(new Pipe());
+   if (frameCount % 100 === 0) pipes.push(new Pipe());
    for (let i = pipes.length - 1; i >= 0; i--){
      pipes[i].update();
      pipes[i].display();
@@ -175,16 +175,15 @@ class Player{
   constructor(x, y){
     this.x = x;
     this.y = y;
-    this.vy = 0;   // vertical velocity
-    this.g = 0.5;  // gravity
-    this.jumpForce = -10;
+    this.vy = 0;   
+    this.g = 0.5;          // GRAVITY 
+    this.jumpForce = -10;  // JUMP 
     this.onGround = true;
-    this.animSpeed = 70;  // how many frames before switching image
+    this.animSpeed = 50;   
     this.currentFrame = 0;
   }
  
   display(){
-    // pick which image to show
     if (frameCount % this.animSpeed < this.animSpeed / 2) {
       image(bird1, this.x, this.y);
     } else {
@@ -193,17 +192,13 @@ class Player{
   }
 
   jump(){
-    if (this.onGround) {
-      this.vy = this.jumpForce; 
-      this.onGround = true;
-    }
+    this.vy = this.jumpForce; 
   }
 
   update(){
-    // gravity
     this.vy += this.g;
     this.y += this.vy;
-
+  
     // simple ground check
     if (this.y > height - 50) {
       this.y = height - 50;
@@ -215,12 +210,12 @@ class Player{
 
 class Pipe {
   constructor() {
-    this.x = width;
-    this.speed = 2;
-    this.gap = 200;  // opening between pipes
-    this.top = random(100, height - 500);
+   this.x = width;
+    this.speed = 5;        
+    this.gap = 200;   //GAP
+    this.top = random(100, height - 400);
     this.bottom = this.top + this.gap;
-    this.score = false;
+    this.scored = false;
   }
 
   update() {

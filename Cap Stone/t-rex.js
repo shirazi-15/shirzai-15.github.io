@@ -126,7 +126,7 @@ function handleCollisions(){
     if(obs.hits(player)){
       scoreKeeping(); 
       gameState = false;
-      noLoop(); 
+      // noLoop(); 
     }
   }
 }
